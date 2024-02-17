@@ -1,4 +1,4 @@
-package edu.java.bot.model;
+package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -6,20 +6,20 @@ import edu.java.bot.Repository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TrackCommand extends AbstractTextCommand {
+public class UntrackCommand extends AbstractTextCommand {
     @Override
     public String command() {
-        return "/track";
+        return "/untrack";
     }
 
     @Override
     public String description() {
-        return "Add link to tracked";
+        return "Remove link from tracked";
     }
 
     @Override
     public SendMessage handleText(Update update, String message) {
-        Repository.put(update.message().chat().id(), message);
-        return new SendMessage(update.message().chat().id(), "Link added to tracked\n");
+        Repository.remove(update.message().chat().id(), message);
+        return new SendMessage(update.message().chat().id(), "Link removed from tracked\n");
     }
 }

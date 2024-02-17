@@ -1,4 +1,4 @@
-package edu.java.bot.model;
+package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class ListCommand implements Command{
+public class ListCommand implements Command {
     @Override
     public String command() {
         return "/list";
@@ -24,7 +24,7 @@ public class ListCommand implements Command{
         if (links == null) {
             return new SendMessage(update.message().chat().id(), "You are not registered do /start\n");
         } else if (links.isEmpty()) {
-            return new SendMessage(update.message().chat().id(), "No links present, add link\n");
+            return new SendMessage(update.message().chat().id(), "No links present, add link /track\n");
         }
         StringBuilder message = new StringBuilder();
         for (int i = 0; i < links.size(); i++) {

@@ -1,8 +1,7 @@
-package edu.java.bot.model;
+package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
@@ -11,6 +10,7 @@ import java.util.List;
 public class HelpCommand implements Command {
 
     private final List<Command> commands;
+
     @Override
     public String command() {
         return "/help";
@@ -19,10 +19,6 @@ public class HelpCommand implements Command {
     @Autowired
     public HelpCommand(List<Command> commands) {
         this.commands = commands;
-    }
-
-    @PostConstruct
-    private void addSelf() {
         commands.add(this);
     }
 
