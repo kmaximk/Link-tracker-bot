@@ -17,9 +17,7 @@ public class Bot implements AutoCloseable, UpdatesListener {
 
     @Override
     public int process(List<Update> updates) {
-        updates.forEach(update -> {
-            bot.execute(processor.process(update));
-        });
+        updates.forEach(update -> bot.execute(processor.process(update)));
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
 

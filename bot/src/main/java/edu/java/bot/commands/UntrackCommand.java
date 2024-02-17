@@ -19,7 +19,10 @@ public class UntrackCommand extends AbstractTextCommand {
 
     @Override
     public SendMessage handleText(Update update, String message) {
-        Repository.remove(update.message().chat().id(), message);
+        boolean ok = Repository.remove(update.message().chat().id(), message);
+        if (!ok) {
+            return new SendMessage(update.message().chat().id(), "Link not found\n");
+        }
         return new SendMessage(update.message().chat().id(), "Link removed from tracked\n");
     }
 }

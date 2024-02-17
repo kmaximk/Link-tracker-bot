@@ -18,9 +18,9 @@ public class Repository {
         links.get(chatId).add(link);
     }
 
-    public static void remove(Long chatId, String link) {
+    public static boolean remove(Long chatId, String link) {
         register(chatId);
-        boolean res = links.get(chatId).remove(link);
+        return links.get(chatId).remove(link);
     }
 
     public static List<String> getLinks(Long chatId) {
