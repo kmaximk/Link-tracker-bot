@@ -3,8 +3,8 @@ package edu.java.bot.processor;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
+import edu.java.bot.Repository;
 import edu.java.bot.Utils;
-import edu.java.bot.commands.Command;
 import edu.java.bot.commands.HelpCommand;
 import edu.java.bot.commands.ListCommand;
 import edu.java.bot.commands.StartCommand;
@@ -35,18 +35,21 @@ public class UserMessageProcessorTest {
     @Mock
     Chat mockChat;
 
+    @Mock
+    Repository mockRepository;
+
     @BeforeEach
     public void setup() {
         messageProcessor = new UserMessageProcessor(new ArrayList<>(List.of(
-            new ListCommand(),
-            new StartCommand(),
-            new TrackCommand(),
-            new UntrackCommand(),
+            new ListCommand(mockRepository),
+            new StartCommand(mockRepository),
+            new TrackCommand(mockRepository),
+            new UntrackCommand(mockRepository),
             new HelpCommand(new ArrayList<>(List.of(
-                new ListCommand(),
-                new StartCommand(),
-                new TrackCommand(),
-                new UntrackCommand()
+                new ListCommand(mockRepository),
+                new StartCommand(mockRepository),
+                new TrackCommand(mockRepository),
+                new UntrackCommand(mockRepository)
             )))
         )));
     }
@@ -58,6 +61,6 @@ public class UserMessageProcessorTest {
         Map<String, Object> result = messageProcessor.process(mockUpdate).getParameters();
 
         assertEquals(5001L, (Long) result.get("chat_id"));
-        assertFalse(((String )result.get("text")).isBlank());
+        assertFalse(((String) result.get("text")).isBlank());
     }
 }

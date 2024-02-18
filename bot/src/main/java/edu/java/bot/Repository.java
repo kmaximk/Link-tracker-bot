@@ -5,26 +5,28 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Repository {
-    private static final Map<Long, Set<String>> links = new HashMap<>();
+    private static final Map<Long, Set<String>> LINKS = new HashMap<>();
 
-    public static void register(Long chatId) {
-        links.computeIfAbsent(chatId, k -> new HashSet<>());
+    public void register(Long chatId) {
+        LINKS.computeIfAbsent(chatId, k -> new HashSet<>());
     }
 
-    public static void put(Long chatId, String link) {
+    public void put(Long chatId, String link) {
         register(chatId);
-        links.get(chatId).add(link);
+        LINKS.get(chatId).add(link);
     }
 
-    public static boolean remove(Long chatId, String link) {
+    public boolean remove(Long chatId, String link) {
         register(chatId);
-        return links.get(chatId).remove(link);
+        return LINKS.get(chatId).remove(link);
     }
 
-    public static List<String> getLinks(Long chatId) {
-        Set<String> linksToUser = links.get(chatId);
+    public List<String> getLinks(Long chatId) {
+        Set<String> linksToUser = LINKS.get(chatId);
         if (linksToUser != null) {
             return linksToUser.stream().toList();
         }

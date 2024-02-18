@@ -3,10 +3,18 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class StartCommand implements Command {
+
+    Repository repository;
+
+    @Autowired
+    public StartCommand(Repository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public String command() {
@@ -20,7 +28,7 @@ public class StartCommand implements Command {
 
     @Override
     public SendMessage handle(Update update) {
-        Repository.register(update.message().chat().id());
+        repository.register(update.message().chat().id());
         return new SendMessage(update.message().chat().id(), "Registered user");
     }
 }

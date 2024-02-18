@@ -3,10 +3,11 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
+import edu.java.bot.Repository;
+import edu.java.bot.Utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import edu.java.bot.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,13 +32,16 @@ public class HelpCommandTest {
     @Mock
     Chat mockChat;
 
+    @Mock
+    Repository mockRepository;
+
     @BeforeEach
     public void setup() {
         helpCommand = new HelpCommand(new ArrayList<>(List.of(
-            new ListCommand(),
-            new StartCommand(),
-            new TrackCommand(),
-            new UntrackCommand()
+            new ListCommand(mockRepository),
+            new StartCommand(mockRepository),
+            new TrackCommand(mockRepository),
+            new UntrackCommand(mockRepository)
         )));
     }
 
@@ -58,7 +62,7 @@ public class HelpCommandTest {
         String textResult = (String) result.get("text");
         Long chatId = (Long) result.get("chat_id");
         List<String> commandsRes = new ArrayList<>();
-        for (String command : textResult.split("\n")) {
+        for (String command : textResult.lines().toList()) {
             String[] res = command.split("\\s+", 2);
             commandsRes.add(res[0]);
             assertFalse(res[1].isBlank());

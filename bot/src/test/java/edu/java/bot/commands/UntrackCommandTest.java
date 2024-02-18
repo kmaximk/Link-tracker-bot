@@ -5,6 +5,7 @@ import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.Repository;
 import edu.java.bot.Utils;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,12 +14,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class UntrackCommandTest {
@@ -33,21 +34,23 @@ public class UntrackCommandTest {
     @Mock
     Chat mockChat;
 
+    @Mock
+    Repository mockRepository;
+
     @BeforeEach
     public void setup() {
-        untrackCommand = new UntrackCommand();
+        untrackCommand = new UntrackCommand(mockRepository);
     }
 
     @Test
     public void handleUpdateTest() {
         Utils.fillMockChatId(mockUpdate, mockMessage, mockChat, 5001L);
         Utils.fillMockText(mockUpdate, mockMessage, "/untrack https://github.com/");
-        try (MockedStatic<Repository> mocked = mockStatic(Repository.class)) {
-            Map<String, Object> result = untrackCommand.handle(mockUpdate).getParameters();
-            Long resultChatId = (Long) result.get("chat_id");
-            assertEquals(5001, resultChatId);
-            mocked.verify(() -> Repository.remove(5001L, "https://github.com/"), times(1));
-        }
+        Map<String, Object> result = untrackCommand.handle(mockUpdate).getParameters();
+        Long resultChatId = (Long) result.get("chat_id");
+
+        assertEquals(5001, resultChatId);
+        verify(mockRepository, times(1)).remove(5001L, "https://github.com/");
     }
 
     @ParameterizedTest
@@ -58,6 +61,7 @@ public class UntrackCommandTest {
         try (MockedStatic<Repository> mocked = mockStatic(Repository.class)) {
             Map<String, Object> result = untrackCommand.handle(mockUpdate).getParameters();
             Long resultChatId = (Long) result.get("chat_id");
+
             assertEquals(5001, resultChatId);
             mocked.verifyNoInteractions();
         }

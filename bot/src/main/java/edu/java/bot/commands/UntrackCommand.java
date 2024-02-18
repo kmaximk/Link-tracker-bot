@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UntrackCommand extends AbstractTextCommand {
+    public UntrackCommand(Repository repository) {
+        super(repository);
+    }
+
     @Override
     public String command() {
         return "/untrack";
@@ -14,12 +18,12 @@ public class UntrackCommand extends AbstractTextCommand {
 
     @Override
     public String description() {
-        return "Remove link from tracked";
+        return "Removes link from tracked";
     }
 
     @Override
     public SendMessage handleText(Update update, String message) {
-        boolean ok = Repository.remove(update.message().chat().id(), message);
+        boolean ok = repository.remove(update.message().chat().id(), message);
         if (!ok) {
             return new SendMessage(update.message().chat().id(), "Link not found\n");
         }

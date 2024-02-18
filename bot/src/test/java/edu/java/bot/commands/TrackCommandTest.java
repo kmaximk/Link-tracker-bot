@@ -4,21 +4,21 @@ import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import edu.java.bot.Repository;
-import java.util.Map;
 import edu.java.bot.Utils;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
 @ExtendWith(MockitoExtension.class)
 public class TrackCommandTest {
@@ -33,21 +33,23 @@ public class TrackCommandTest {
     @Mock
     Chat mockChat;
 
+    @Mock
+    Repository mockRepository;
+
     @BeforeEach
     public void setup() {
-        trackCommand = new TrackCommand();
+        trackCommand = new TrackCommand(mockRepository);
     }
 
     @Test
     public void handleUpdateTest() {
         Utils.fillMockChatId(mockUpdate, mockMessage, mockChat, 5001L);
         Utils.fillMockText(mockUpdate, mockMessage, "/track https://github.com/");
-        try (MockedStatic<Repository> mocked = mockStatic(Repository.class)) {
-            Map<String, Object> result = trackCommand.handle(mockUpdate).getParameters();
-            Long resultChatId = (Long) result.get("chat_id");
-            assertEquals(5001, resultChatId);
-            mocked.verify(() -> Repository.put(5001L, "https://github.com/"), times(1));
-        }
+        Map<String, Object> result = trackCommand.handle(mockUpdate).getParameters();
+        Long resultChatId = (Long) result.get("chat_id");
+
+        assertEquals(5001, resultChatId);
+        verify(mockRepository, times(1)).put(5001L, "https://github.com/");
     }
 
     @ParameterizedTest
@@ -55,12 +57,11 @@ public class TrackCommandTest {
     public void handleWrongLinkTest(String value) {
         Utils.fillMockChatId(mockUpdate, mockMessage, mockChat, 5001L);
         Utils.fillMockText(mockUpdate, mockMessage, value);
-        try (MockedStatic<Repository> mocked = mockStatic(Repository.class)) {
-            Map<String, Object> result = trackCommand.handle(mockUpdate).getParameters();
-            Long resultChatId = (Long) result.get("chat_id");
-            assertEquals(5001, resultChatId);
-            mocked.verifyNoInteractions();
-        }
+        Map<String, Object> result = trackCommand.handle(mockUpdate).getParameters();
+        Long resultChatId = (Long) result.get("chat_id");
+
+        assertEquals(5001, resultChatId);
+        verifyNoInteractions(mockRepository);
     }
 
     @ParameterizedTest

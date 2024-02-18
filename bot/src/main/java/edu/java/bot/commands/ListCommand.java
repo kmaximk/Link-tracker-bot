@@ -3,11 +3,20 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.Repository;
-import org.springframework.stereotype.Component;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 public class ListCommand implements Command {
+
+    Repository repository;
+
+    @Autowired
+    public ListCommand(Repository repository) {
+        this.repository = repository;
+    }
+
     @Override
     public String command() {
         return "/list";
@@ -20,7 +29,7 @@ public class ListCommand implements Command {
 
     @Override
     public SendMessage handle(Update update) {
-        List<String> links = Repository.getLinks(update.message().chat().id());
+        List<String> links = repository.getLinks(update.message().chat().id());
         if (links == null) {
             return new SendMessage(update.message().chat().id(), "You are not registered do /start\n");
         } else if (links.isEmpty()) {
