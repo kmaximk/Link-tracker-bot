@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class StartCommand implements Command {
 
-    Repository repository;
+    private final Repository repository;
 
     @Autowired
     public StartCommand(Repository repository) {

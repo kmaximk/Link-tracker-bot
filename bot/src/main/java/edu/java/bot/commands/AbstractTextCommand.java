@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class AbstractTextCommand implements Command {
     private final String spacesRegex = "\\s+";
 
-    Repository repository;
+    protected final Repository repository;
 
     @Autowired
     public AbstractTextCommand(Repository repository) {

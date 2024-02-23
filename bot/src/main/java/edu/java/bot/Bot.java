@@ -15,15 +15,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class Bot implements AutoCloseable, UpdatesListener {
 
+    private final TelegramBot bot;
+
+    private final UserMessageProcessor processor;
+
     @Override
     public int process(List<Update> updates) {
         updates.forEach(update -> bot.execute(processor.process(update)));
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
-    }
-
-    @Override
-    public void close() {
-        bot.shutdown();
     }
 
     private void setCommands(List<? extends Command> commands) {
@@ -37,13 +36,15 @@ public class Bot implements AutoCloseable, UpdatesListener {
         setCommands(processor.commands());
     }
 
-    private final TelegramBot bot;
-
-    private final UserMessageProcessor processor;
-
     @Autowired
     public Bot(TelegramBot bot, UserMessageProcessor processor) {
         this.bot = bot;
         this.processor = processor;
     }
+
+    @Override
+    public void close() {
+        bot.shutdown();
+    }
+
 }

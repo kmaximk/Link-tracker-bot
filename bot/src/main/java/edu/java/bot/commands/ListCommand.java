@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ListCommand implements Command {
 
-    Repository repository;
+    private final Repository repository;
 
     @Autowired
     public ListCommand(Repository repository) {
