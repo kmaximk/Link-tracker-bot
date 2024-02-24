@@ -6,24 +6,26 @@ import edu.java.scrapper.stackoverflow.StackOverflowResponse;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.reactive.function.client.WebClient;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
 public class StackOverflowClientTest {
 
     @RegisterExtension
     private static WireMockExtension wireMockExtension =
-        WireMockExtension.newInstance().options(wireMockConfig().port(90)).build();
+        WireMockExtension.newInstance().options(wireMockConfig().dynamicPort()).build();
 
-    @Autowired
-    StackOverflowClient stackOverflowClient;
+    private StackOverflowClient stackOverflowClient;
+    @BeforeEach
+    public void setup() {
+        stackOverflowClient = new StackOverflowClient(WebClient.builder(), wireMockExtension.baseUrl());
+    }
 
     @Test
     public void getUpdatesTest() {
