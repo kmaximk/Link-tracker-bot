@@ -69,10 +69,10 @@ public class StackOverflowClientTest {
                 }""")));
         StackOverflowResponse response = stackOverflowClient.getQuestionUpdate("30080855");
 
-        assertEquals(6, response.getAnswerCount());
-        assertEquals(OffsetDateTime.ofInstant(Instant.ofEpochSecond(1430925349), ZoneOffset.UTC), response.getCreationDate());
-        assertEquals(OffsetDateTime.ofInstant(Instant.ofEpochSecond(1661178318), ZoneOffset.UTC), response.getLastActivityDate());
-        assertEquals(OffsetDateTime.ofInstant(Instant.ofEpochSecond(1616369850), ZoneOffset.UTC), response.getLastEditDate());
+        assertEquals(6, response.answerCount());
+        assertEquals(OffsetDateTime.ofInstant(Instant.ofEpochSecond(1430925349), ZoneOffset.UTC), response.creationDate());
+        assertEquals(OffsetDateTime.ofInstant(Instant.ofEpochSecond(1661178318), ZoneOffset.UTC), response.lastActivityDate());
+        assertEquals(OffsetDateTime.ofInstant(Instant.ofEpochSecond(1616369850), ZoneOffset.UTC), response.lastEditDate());
 
     }
 }
