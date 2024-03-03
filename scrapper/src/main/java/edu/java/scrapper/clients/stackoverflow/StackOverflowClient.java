@@ -1,4 +1,4 @@
-package edu.java.scrapper.stackoverflow;
+package edu.java.scrapper.clients.stackoverflow;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;

@@ -36,6 +36,16 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.2.0</version>
+        </dependency>
 
         <!-- Kafka -->
         <dependency>
@@ -64,6 +74,12 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.16.1</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.java</groupId>
+            <artifactId>common</artifactId>
+            <version>0.1</version>
+            <scope>compile</scope>
         </dependency>
 
 

@@ -17,7 +17,10 @@ public record ApplicationConfig(
     String gitHubApiUri,
 
     @DefaultValue("https://api.stackexchange.com/2.3")
-    String stackOverflowApiUri
+    String stackOverflowApiUri,
+
+    @DefaultValue("http://localhost:8090")
+    String botApiUri
 ) {
     @Bean
     private long schedulerDelay() {

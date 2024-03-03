@@ -1,4 +1,4 @@
-package edu.java.scrapper.github;
+package edu.java.scrapper.clients.github;
 
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
