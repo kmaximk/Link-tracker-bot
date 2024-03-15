@@ -1,20 +1,11 @@
-package edu.java.scrapper;
+package edu.java.scrapper.repository;
 
-import liquibase.Contexts;
-import liquibase.LabelExpression;
-import liquibase.Liquibase;
 import liquibase.Scope;
 import liquibase.command.CommandScope;
-import liquibase.command.core.UpdateCommandStep;
-import liquibase.command.core.helpers.DbUrlConnectionCommandStep;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
-import liquibase.exception.CommandExecutionException;
-import liquibase.exception.DatabaseException;
-import liquibase.exception.LiquibaseException;
 import liquibase.resource.DirectoryResourceAccessor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -22,14 +13,12 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 @Testcontainers
 @Slf4j
-public abstract class IntegrationTest {
+public abstract class IntegrationEnvironment {
     public static PostgreSQLContainer<?> POSTGRES;
 
     static {
@@ -71,6 +60,7 @@ public abstract class IntegrationTest {
 
     @DynamicPropertySource
     static void jdbcProperties(DynamicPropertyRegistry registry) {
+        System.out.println(POSTGRES.getJdbcUrl());
         registry.add("spring.datasource.url", POSTGRES::getJdbcUrl);
         registry.add("spring.datasource.username", POSTGRES::getUsername);
         registry.add("spring.datasource.password", POSTGRES::getPassword);
