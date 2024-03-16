@@ -1,6 +1,6 @@
 package edu.java.scrapper.service;
 
-import edu.java.dto.Link;
+import edu.java.scrapper.models.Link;
 import java.net.URI;
 import java.util.List;
 

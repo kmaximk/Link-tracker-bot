@@ -2,19 +2,19 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.Repository;
 import java.util.List;
+import edu.java.bot.clients.ScrapperClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ListCommand implements Command {
 
-    private final Repository repository;
+    private final ScrapperClient scrapperClient;
 
     @Autowired
-    public ListCommand(Repository repository) {
-        this.repository = repository;
+    public ListCommand(ScrapperClient scrapperClient) {
+        this.scrapperClient = scrapperClient;
     }
 
     @Override
@@ -29,10 +29,11 @@ public class ListCommand implements Command {
 
     @Override
     public SendMessage handle(Update update) {
-        List<String> links = repository.getLinks(update.message().chat().id());
-        if (links == null) {
-            return new SendMessage(update.message().chat().id(), "You are not registered do /start\n");
-        } else if (links.isEmpty()) {
+        List<String> links = scrapperClient
+            .getLinks(update.message().chat().id()).
+            links().stream()
+            .map(link -> link.url().toString()).toList();
+        if (links.isEmpty()) {
             return new SendMessage(update.message().chat().id(), "No links present, add link /track\n");
         }
         StringBuilder message = new StringBuilder();

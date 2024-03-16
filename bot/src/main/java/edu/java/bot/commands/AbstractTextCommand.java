@@ -3,16 +3,17 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.Repository;
+import edu.java.bot.clients.ScrapperClient;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractTextCommand implements Command {
     private final String spacesRegex = "\\s+";
 
-    protected final Repository repository;
+    protected final ScrapperClient scrapperClient;
 
     @Autowired
-    public AbstractTextCommand(Repository repository) {
-        this.repository = repository;
+    public AbstractTextCommand(ScrapperClient scrapperClient) {
+        this.scrapperClient = scrapperClient;
     }
 
     @Override
@@ -23,6 +24,7 @@ public abstract class AbstractTextCommand implements Command {
         } else if (text.length < 2) {
             return new SendMessage(update.message().chat().id(), "Link not specified\n");
         }
+        System.out.println(text[1]);
         return handleText(update, text[1]);
     }
 

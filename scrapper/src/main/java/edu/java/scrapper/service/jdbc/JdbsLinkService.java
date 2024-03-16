@@ -5,10 +5,11 @@ import edu.java.scrapper.controller.exceptions.ReAddingLinkException;
 import edu.java.scrapper.domain.jdbc.JdbcAssignmentRepository;
 import edu.java.scrapper.domain.jdbc.JdbcChatRepository;
 import edu.java.scrapper.domain.jdbc.JdbcLinkRepository;
-import edu.java.dto.Link;
+import edu.java.scrapper.models.Link;
 import edu.java.scrapper.service.LinkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +25,9 @@ public class JdbsLinkService implements LinkService {
     private final JdbcLinkRepository linkRepository;
 
     @Override
+    @Transactional
     public Link add(long tgChatId, URI url) {
+
         Link link = linkRepository.findLink(url).orElseGet(() -> linkRepository.add(url));
         if (assignmentRepository.linkIsTracked(link, tgChatId)) {
             throw new ReAddingLinkException(String.format("Link %s is already tracked", link.url()));
@@ -34,6 +37,7 @@ public class JdbsLinkService implements LinkService {
     }
 
     @Override
+    @Transactional
     public Link remove(long tgChatId, URI url) {
         Optional<Link> link = linkRepository.findLink(url);
         if (link.isEmpty() || assignmentRepository.remove(link.get().id(), tgChatId) == 0) {

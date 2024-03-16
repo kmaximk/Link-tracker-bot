@@ -11,6 +11,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import java.io.File;
 import java.nio.file.Path;
@@ -27,6 +28,8 @@ public abstract class IntegrationEnvironment {
             .withUsername("postgres")
             .withPassword("postgres");
         POSTGRES.start();
+
+        POSTGRES.waitingFor(Wait.forListeningPort());
 
         try {
             runMigrations();

@@ -13,7 +13,7 @@ public class JdbcChatRepository {
     private final JdbcClient jdbcClient;
 
     public boolean containsChat(Long tgChatID) {
-        return jdbcClient.sql("select count(*) from chat where id = ?").param(tgChatID).update() != 0;
+        return jdbcClient.sql("select count(*) from chat where id = ?").param(tgChatID).query(Long.class).single() != 0;
     }
 
     // @Override

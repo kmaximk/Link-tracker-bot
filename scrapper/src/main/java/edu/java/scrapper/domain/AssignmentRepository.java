@@ -1,6 +1,6 @@
 package edu.java.scrapper.domain;
 
-import edu.java.dto.Link;
+import edu.java.scrapper.models.Link;
 import java.util.List;
 
 public interface AssignmentRepository {

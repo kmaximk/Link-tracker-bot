@@ -3,9 +3,11 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.Repository;
 import edu.java.bot.Utils;
+import java.net.URI;
 import java.util.Map;
+import edu.java.bot.clients.ScrapperClient;
+import edu.java.dto.AddLinkRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,11 +36,11 @@ public class TrackCommandTest {
     Chat mockChat;
 
     @Mock
-    Repository mockRepository;
+    ScrapperClient scrapperClient;
 
     @BeforeEach
     public void setup() {
-        trackCommand = new TrackCommand(mockRepository);
+        trackCommand = new TrackCommand(scrapperClient);
     }
 
     @Test
@@ -49,7 +51,8 @@ public class TrackCommandTest {
         Long resultChatId = (Long) result.get("chat_id");
 
         assertEquals(5001, resultChatId);
-        verify(mockRepository, times(1)).put(5001L, "https://github.com/");
+        verify(scrapperClient, times(1)).postLinks(5001L,
+                new AddLinkRequest(URI.create("https://github.com/")));
     }
 
     @ParameterizedTest
@@ -61,7 +64,7 @@ public class TrackCommandTest {
         Long resultChatId = (Long) result.get("chat_id");
 
         assertEquals(5001, resultChatId);
-        verifyNoInteractions(mockRepository);
+        verifyNoInteractions(scrapperClient);
     }
 
     @ParameterizedTest

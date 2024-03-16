@@ -3,8 +3,8 @@ package edu.java.bot.processor;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.Repository;
 import edu.java.bot.Utils;
+import edu.java.bot.clients.ScrapperClient;
 import edu.java.bot.commands.HelpCommand;
 import edu.java.bot.commands.ListCommand;
 import edu.java.bot.commands.StartCommand;
@@ -36,20 +36,20 @@ public class UserMessageProcessorTest {
     Chat mockChat;
 
     @Mock
-    Repository mockRepository;
+    ScrapperClient scrapperClient;
 
     @BeforeEach
     public void setup() {
         messageProcessor = new UserMessageProcessor(new ArrayList<>(List.of(
-            new ListCommand(mockRepository),
-            new StartCommand(mockRepository),
-            new TrackCommand(mockRepository),
-            new UntrackCommand(mockRepository),
+            new ListCommand(scrapperClient),
+            new StartCommand(scrapperClient),
+            new TrackCommand(scrapperClient),
+            new UntrackCommand(scrapperClient),
             new HelpCommand(new ArrayList<>(List.of(
-                new ListCommand(mockRepository),
-                new StartCommand(mockRepository),
-                new TrackCommand(mockRepository),
-                new UntrackCommand(mockRepository)
+                new ListCommand(scrapperClient),
+                new StartCommand(scrapperClient),
+                new TrackCommand(scrapperClient),
+                new UntrackCommand(scrapperClient)
             )))
         )));
     }
