@@ -1,5 +1,6 @@
 package edu.java.scrapper;
 
+import edu.java.scrapper.domain.jdbc.JdbcLinkRepository;
 import edu.java.scrapper.models.Link;
 import edu.java.dto.LinkUpdateRequest;
 import edu.java.scrapper.clients.botclient.BotClient;
@@ -23,6 +24,8 @@ public class LinkUpdaterScheduler {
 
     private final JdbcAssignmentRepository assignmentRepository;
 
+    private final JdbcLinkRepository linkRepository;
+
     private final GitHubClient gitHubClient;
 
     private final StackOverflowClient stackOverflowClient;
@@ -31,21 +34,25 @@ public class LinkUpdaterScheduler {
 
     @Scheduled(fixedDelayString = "#{@schedulerDelay}")
     public void update() {
-        log.info("Links updated");
-        List<Link> links = assignmentRepository.getOutdatedLinks(10L);
-        System.out.println(links);
-        for (Link link : links) {
-            URI uri = link.url();
-            System.out.println(uri);;
-            String[] parts = uri.getPath().split("/");
-            if (uri.getHost().contains("github")) {
-                GitHubResponse gitHubResponse = gitHubClient.getRepositoryInfo(parts[1], parts[2]);
-                sendUpdate(gitHubResponse.updatedAt(), link);
-            } else if (uri.getHost().contains("stackoverflow")) {
-                StackOverflowResponse response = stackOverflowClient.getQuestionUpdate(parts[2]);
-                sendUpdate(response.lastActivityDate(), link);
-            }
-        }
+//        List<Link> links = assignmentRepository.getOutdatedLinks(10000L);
+//        log.info("Links updated {}", links);
+//        OffsetDateTime currentTime = OffsetDateTime.now();
+//        for (Link link : links) {
+//            URI uri = link.url();
+//            String[] parts = uri.getPath().split("/");
+//            OffsetDateTime lastActivity;
+//            if (uri.getHost().contains("github")) {
+//                lastActivity = gitHubClient.getRepositoryInfo(parts[1], parts[2]).updatedAt();
+//            } else if (uri.getHost().contains("stackoverflow")) {
+//                lastActivity = stackOverflowClient
+//                    .getQuestionUpdate(parts[2])
+//                    .lastActivityDate();
+//            } else {
+//                throw new AssertionError(String.format("Invalid link %s", link.url()));
+//            }
+//            sendUpdate(currentTime, link);
+//            linkRepository.updateLink(link.id(), currentTime, lastActivity);
+//        }
     }
 
     private void sendUpdate(OffsetDateTime responseTime, Link link) {

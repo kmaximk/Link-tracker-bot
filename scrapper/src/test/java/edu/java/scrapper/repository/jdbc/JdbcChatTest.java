@@ -5,31 +5,45 @@ import edu.java.scrapper.domain.jdbc.JdbcChatRepository;
 import edu.java.scrapper.domain.jdbc.JdbcLinkRepository;
 import edu.java.scrapper.models.Link;
 import edu.java.scrapper.repository.IntegrationEnvironment;
-import java.net.URI;
-import java.util.Collections;
-import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.jdbc.core.simple.JdbcClient;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
-@SpringBootTest
+import java.net.URI;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.util.Collections;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 public class JdbcChatTest extends IntegrationEnvironment {
-    @Autowired
-    private JdbcLinkRepository linkRepository;
-    @Autowired
-    private JdbcChatRepository chatRepository;
+//    @BeforeAll
+//    public static void start() {
+//        DriverManagerDataSource driverManager = new DriverManagerDataSource();
+//        driverManager.setDriverClassName("org.postgresql.Driver");
+//        driverManager.setUrl(POSTGRES.getJdbcUrl());
+//        driverManager.setUsername(POSTGRES.getUsername());
+//        driverManager.setPassword(POSTGRES.getPassword());
+//        JdbcClient client = JdbcClient.create(driverManager);
+//        chatRepository = new JdbcChatRepository(client);
+//        linkRepository = new JdbcLinkRepository(client);
+//        assignmentRepository = new JdbcAssignmentRepository(client);
+//    }
 
-    @Autowired
-    private JdbcAssignmentRepository assignmentRepository;
-
-    @Autowired
-    private JdbcClient jdbcClient;
+//    public static void start() {
+//        linkRepository = new JdbcLinkRepository(jdbcClient);
+//        assignmentRepository = new JdbcAssignmentRepository(jdbcClient);
+//        chatRepository = new JdbcChatRepository(jdbcClient);
+//    }
 
     @Test
     @Transactional
@@ -41,6 +55,8 @@ public class JdbcChatTest extends IntegrationEnvironment {
         assertTrue(chatRepository.containsChat(1000L));
         assertTrue(chatRepository.containsChat(1001L));
 
+        chatRepository.remove(1000);
+        chatRepository.remove(1001);
     }
 
     @Test
@@ -64,6 +80,7 @@ public class JdbcChatTest extends IntegrationEnvironment {
             URI.create("http:test2"),
             URI.create("http:test3")
         );
+
         uris.forEach(uri -> {
             Link link = linkRepository.add(uri);
             assignmentRepository.add(link.id(), 1000L);
@@ -78,6 +95,7 @@ public class JdbcChatTest extends IntegrationEnvironment {
 
         links = assignmentRepository.findLinksByChat(1000L);
         assertEquals(0, links.size());
+        chatRepository.remove(1000);
     }
 
     @Test
@@ -93,9 +111,13 @@ public class JdbcChatTest extends IntegrationEnvironment {
         });
 
         List<Long> foundChats = assignmentRepository.findChatsByLink(link.id());
-
         assertEquals(3, foundChats.size());
         Collections.sort(foundChats);
         assertEquals(chats, foundChats);
+
+        chats.forEach(chat -> {
+            assignmentRepository.remove(link.id(), chat);
+            chatRepository.remove(chat);
+        });
     }
 }

@@ -13,25 +13,30 @@ public class JdbcChatRepository {
     private final JdbcClient jdbcClient;
 
     public boolean containsChat(Long tgChatID) {
-        return jdbcClient.sql("select count(*) from chat where id = ?").param(tgChatID).query(Long.class).single() != 0;
+        return jdbcClient.sql("select count(*) from chat where id = ?")
+            .param(tgChatID)
+            .query(Long.class)
+            .single() != 0;
     }
 
     // @Override
+    @Transactional
     public void add(long chatID) {
         jdbcClient.sql("insert into chat (id) values (:chatID)")
-            .param("chatID", chatID, Types.BIGINT).update();
+            .param("chatID", chatID, Types.BIGINT)
+            .update();
     }
 
     //@Override
-    @Transactional
     public int remove(long chatID) {
         return jdbcClient.sql("delete from chat where id = :chatID")
-            .param("chatID", chatID).update();
+            .param("chatID", chatID)
+            .update();
     }
 
-    @Transactional
     public void removeLinksByChat(long chatID) {
         jdbcClient.sql("delete from assignment where chat_id = :chatID")
-            .param("chatID", chatID).update();
+            .param("chatID", chatID)
+            .update();
     }
 }

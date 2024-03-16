@@ -10,6 +10,7 @@ import edu.java.scrapper.service.LinkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +28,6 @@ public class JdbsLinkService implements LinkService {
     @Override
     @Transactional
     public Link add(long tgChatId, URI url) {
-
         Link link = linkRepository.findLink(url).orElseGet(() -> linkRepository.add(url));
         if (assignmentRepository.linkIsTracked(link, tgChatId)) {
             throw new ReAddingLinkException(String.format("Link %s is already tracked", link.url()));
@@ -41,12 +41,13 @@ public class JdbsLinkService implements LinkService {
     public Link remove(long tgChatId, URI url) {
         Optional<Link> link = linkRepository.findLink(url);
         if (link.isEmpty() || assignmentRepository.remove(link.get().id(), tgChatId) == 0) {
-            throw new LinkNotFoundException(String.format("Link %s is not tracked", url.toString()));
+            throw new LinkNotFoundException(String.format("Link %s is not tracked", url));
         }
         return link.get();
     }
 
     @Override
+    @Transactional
     public List<Link> listAll(long tgChatId) {
         return assignmentRepository.findLinksByChat(tgChatId);
     }

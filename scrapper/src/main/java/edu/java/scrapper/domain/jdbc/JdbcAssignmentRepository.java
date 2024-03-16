@@ -24,7 +24,6 @@ public class JdbcAssignmentRepository implements AssignmentRepository {
     }
 
     @Override
-    @Transactional
     public List<Link> findLinksByChat(Long chatID) {
         return jdbcClient.sql("""
                 select * from link where id in
@@ -36,6 +35,7 @@ public class JdbcAssignmentRepository implements AssignmentRepository {
     }
 
     @Override
+    @Transactional
     public void add(Long linkID, Long chatID) {
         jdbcClient.sql("insert into assignment (chat_id, link_id) values (?, ?)")
             .params(chatID, linkID)
@@ -45,7 +45,7 @@ public class JdbcAssignmentRepository implements AssignmentRepository {
     @Override
     public int remove(Long linkID, Long chatID) {
         return jdbcClient.sql("delete from assignment where link_id = ? and chat_id = ?")
-            .params(chatID, linkID)
+            .params(linkID, chatID)
             .update();
     }
 

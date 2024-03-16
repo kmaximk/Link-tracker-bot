@@ -17,11 +17,12 @@ public class JdbcLinkRepository {
     private final JdbcClient jdbcClient;
 
     //@Override
-    @Transactional
     public List<Link> findAll() {
         return jdbcClient.sql("""
-            select * from link
-            """).query(Link.class).list();
+                select * from link
+                """)
+            .query(Link.class)
+            .list();
     }
 
     // @Override
@@ -37,7 +38,6 @@ public class JdbcLinkRepository {
             .single();
     }
 
-    @Transactional
     //@Override
     public int remove(URI uri) {
         return jdbcClient.sql("delete from link where url = ?")
@@ -53,6 +53,7 @@ public class JdbcLinkRepository {
             .optional();
     }
 
+    @Transactional
     public void updateLink(Long linkID, OffsetDateTime checkTime, OffsetDateTime updatedAt) {
         jdbcClient.sql("update link set last_check_time = ?, updated_at = ? where id = ?")
             .params(checkTime, updatedAt, linkID)
