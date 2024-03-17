@@ -3,23 +3,19 @@ package edu.java.scrapper.service.jdbc;
 import edu.java.scrapper.controller.exceptions.LinkNotFoundException;
 import edu.java.scrapper.controller.exceptions.ReAddingLinkException;
 import edu.java.scrapper.domain.jdbc.JdbcAssignmentRepository;
-import edu.java.scrapper.domain.jdbc.JdbcChatRepository;
 import edu.java.scrapper.domain.jdbc.JdbcLinkRepository;
 import edu.java.scrapper.models.Link;
 import edu.java.scrapper.service.LinkService;
+import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.net.URI;
-import java.util.List;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class JdbsLinkService implements LinkService {
-
-    private final JdbcChatRepository chatRepository;
 
     private final JdbcAssignmentRepository assignmentRepository;
 

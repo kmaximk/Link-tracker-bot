@@ -6,8 +6,8 @@ import edu.java.bot.clients.ScrapperClient;
 import edu.java.bot.clients.ScrapperResponseException;
 import edu.java.dto.LinkResponse;
 import edu.java.dto.RemoveLinkRequest;
-import org.springframework.stereotype.Component;
 import java.net.URI;
+import org.springframework.stereotype.Component;
 
 @Component
 public class UntrackCommand extends AbstractTextCommand {

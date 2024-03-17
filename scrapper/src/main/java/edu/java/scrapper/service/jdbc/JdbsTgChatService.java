@@ -2,9 +2,7 @@ package edu.java.scrapper.service.jdbc;
 
 import edu.java.scrapper.controller.exceptions.ChatNotFoundException;
 import edu.java.scrapper.controller.exceptions.ReRegistrationException;
-import edu.java.scrapper.domain.jdbc.JdbcAssignmentRepository;
 import edu.java.scrapper.domain.jdbc.JdbcChatRepository;
-import edu.java.scrapper.domain.jdbc.JdbcLinkRepository;
 import edu.java.scrapper.service.TgChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

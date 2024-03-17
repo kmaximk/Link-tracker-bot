@@ -11,4 +11,8 @@ public interface AssignmentRepository {
     void add(Long linkID, Long chatID);
 
     int remove(Long linkID, Long chatID);
+
+    boolean linkIsTracked(Link link, Long userID);
+
+    List<Link> getOutdatedLinks(Long interval);
 }

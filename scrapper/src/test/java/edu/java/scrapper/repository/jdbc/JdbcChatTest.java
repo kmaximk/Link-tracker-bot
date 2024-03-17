@@ -7,46 +7,41 @@ import edu.java.scrapper.models.Link;
 import edu.java.scrapper.repository.IntegrationEnvironment;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.net.URI;
-import java.sql.Driver;
-import java.sql.DriverManager;
 import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Testcontainers
+@Transactional
 public class JdbcChatTest extends IntegrationEnvironment {
-//    @BeforeAll
-//    public static void start() {
-//        DriverManagerDataSource driverManager = new DriverManagerDataSource();
-//        driverManager.setDriverClassName("org.postgresql.Driver");
-//        driverManager.setUrl(POSTGRES.getJdbcUrl());
-//        driverManager.setUsername(POSTGRES.getUsername());
-//        driverManager.setPassword(POSTGRES.getPassword());
-//        JdbcClient client = JdbcClient.create(driverManager);
-//        chatRepository = new JdbcChatRepository(client);
-//        linkRepository = new JdbcLinkRepository(client);
-//        assignmentRepository = new JdbcAssignmentRepository(client);
-//    }
 
-//    public static void start() {
-//        linkRepository = new JdbcLinkRepository(jdbcClient);
-//        assignmentRepository = new JdbcAssignmentRepository(jdbcClient);
-//        chatRepository = new JdbcChatRepository(jdbcClient);
-//    }
+    private static JdbcLinkRepository linkRepository;
+
+    private static JdbcAssignmentRepository assignmentRepository;
+
+    private static JdbcChatRepository chatRepository;
+
+    @BeforeAll
+    static void init() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setUrl(POSTGRES.getJdbcUrl());
+        dataSource.setUsername(POSTGRES.getUsername());
+        dataSource.setPassword(POSTGRES.getPassword());
+        assignmentRepository = new JdbcAssignmentRepository(JdbcClient.create(dataSource));
+        chatRepository = new JdbcChatRepository(JdbcClient.create(dataSource));
+        linkRepository= new JdbcLinkRepository(JdbcClient.create(dataSource));
+    }
 
     @Test
-    @Transactional
     @Rollback
     void addChatTest() {
         chatRepository.add(1000);
@@ -60,7 +55,6 @@ public class JdbcChatTest extends IntegrationEnvironment {
     }
 
     @Test
-    @Transactional
     @Rollback
     void removeChatTest() {
         chatRepository.add(1000);
@@ -71,14 +65,13 @@ public class JdbcChatTest extends IntegrationEnvironment {
     }
 
     @Test
-    @Transactional
     @Rollback
     void addingLinksByChatTest() {
         chatRepository.add(1000);
         List<URI> uris = List.of(
-            URI.create("http:test1"),
-            URI.create("http:test2"),
-            URI.create("http:test3")
+            URI.create("http:test11"),
+            URI.create("http:test12"),
+            URI.create("http:test13")
         );
 
         uris.forEach(uri -> {
@@ -99,11 +92,10 @@ public class JdbcChatTest extends IntegrationEnvironment {
     }
 
     @Test
-    @Transactional
     @Rollback
     void findChatsByLinkTest() {
         List<Long> chats = List.of(1001L, 1002L, 1003L);
-        URI uri = URI.create("http:test");
+        URI uri = URI.create("http:test10");
         Link link = linkRepository.add(uri);
         chats.forEach(chat -> {
             chatRepository.add(chat);
@@ -119,5 +111,6 @@ public class JdbcChatTest extends IntegrationEnvironment {
             assignmentRepository.remove(link.id(), chat);
             chatRepository.remove(chat);
         });
+        linkRepository.remove(uri);
     }
 }

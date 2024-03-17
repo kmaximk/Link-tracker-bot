@@ -2,8 +2,8 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import java.util.List;
 import edu.java.bot.clients.ScrapperClient;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,9 +30,11 @@ public class ListCommand implements Command {
     @Override
     public SendMessage handle(Update update) {
         List<String> links = scrapperClient
-            .getLinks(update.message().chat().id()).
-            links().stream()
-            .map(link -> link.url().toString()).toList();
+            .getLinks(update.message().chat().id())
+            .links()
+            .stream()
+            .map(link -> link.url().toString())
+            .toList();
         if (links.isEmpty()) {
             return new SendMessage(update.message().chat().id(), "No links present, add link /track\n");
         }

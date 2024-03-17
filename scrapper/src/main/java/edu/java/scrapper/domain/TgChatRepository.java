@@ -1,12 +1,11 @@
 package edu.java.scrapper.domain;
 
-import java.net.URI;
-import java.util.List;
-
 public interface TgChatRepository {
-    List<Long> findAll();
+    boolean containsChat(Long tgChatID);
 
     void add(long chatID);
 
     int remove(long chatID);
+
+    void removeLinksByChat(long chatID);
 }
