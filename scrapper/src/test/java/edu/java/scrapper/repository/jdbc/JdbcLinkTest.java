@@ -4,23 +4,23 @@ import edu.java.scrapper.domain.jdbc.JdbcAssignmentRepository;
 import edu.java.scrapper.domain.jdbc.JdbcLinkRepository;
 import edu.java.scrapper.models.LinkModel;
 import edu.java.scrapper.repository.IntegrationEnvironment;
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.net.URI;
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-
-@Transactional
 @Testcontainers
 @SpringBootTest
+@Transactional
 public class JdbcLinkTest extends IntegrationEnvironment {
 
     @Autowired

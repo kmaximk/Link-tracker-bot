@@ -9,13 +9,11 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.jooq.DSLContext;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import static edu.java.scrapper.domain.jooq.tables.Assignment.ASSIGNMENT;
 import static edu.java.scrapper.domain.jooq.tables.Link.LINK;
 
 @RequiredArgsConstructor
-@Service
 public class JooqLinkService implements LinkService {
 
     private final DSLContext context;

@@ -20,8 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
-@Transactional
 @SpringBootTest
+@Transactional
 public class JdbcChatTest extends IntegrationEnvironment {
 
     @Autowired
