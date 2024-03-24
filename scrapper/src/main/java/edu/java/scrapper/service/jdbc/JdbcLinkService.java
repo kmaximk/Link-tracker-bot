@@ -4,18 +4,17 @@ import edu.java.scrapper.controller.exceptions.LinkNotFoundException;
 import edu.java.scrapper.controller.exceptions.ReAddingLinkException;
 import edu.java.scrapper.domain.jdbc.JdbcAssignmentRepository;
 import edu.java.scrapper.domain.jdbc.JdbcLinkRepository;
-import edu.java.scrapper.models.Link;
+import edu.java.scrapper.models.LinkModel;
 import edu.java.scrapper.service.LinkService;
 import java.net.URI;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
 @RequiredArgsConstructor
-public class JdbsLinkService implements LinkService {
+public class JdbcLinkService implements LinkService {
 
     private final JdbcAssignmentRepository assignmentRepository;
 
@@ -23,8 +22,9 @@ public class JdbsLinkService implements LinkService {
 
     @Override
     @Transactional
-    public Link add(long tgChatId, URI url) {
-        Link link = linkRepository.findLink(url).orElseGet(() -> linkRepository.add(url));
+    public LinkModel add(long tgChatId, URI url) {
+        LinkModel link = linkRepository.findLink(url)
+                .orElseGet(() -> linkRepository.add(url, OffsetDateTime.now(), 0));
         if (assignmentRepository.linkIsTracked(link, tgChatId)) {
             throw new ReAddingLinkException(String.format("Link %s is already tracked", link.url()));
         }
@@ -34,8 +34,8 @@ public class JdbsLinkService implements LinkService {
 
     @Override
     @Transactional
-    public Link remove(long tgChatId, URI url) {
-        Optional<Link> link = linkRepository.findLink(url);
+    public LinkModel remove(long tgChatId, URI url) {
+        Optional<LinkModel> link = linkRepository.findLink(url);
         if (link.isEmpty() || assignmentRepository.remove(link.get().id(), tgChatId) == 0) {
             throw new LinkNotFoundException(String.format("Link %s is not tracked", url));
         }
@@ -44,7 +44,21 @@ public class JdbsLinkService implements LinkService {
 
     @Override
     @Transactional
-    public List<Link> listAll(long tgChatId) {
+    public List<LinkModel> listAll(long tgChatId) {
         return assignmentRepository.findLinksByChat(tgChatId);
+    }
+
+    @Override
+    @Transactional
+    public void updateLink(
+        LinkModel link, OffsetDateTime checkTime,
+        OffsetDateTime updatedAt, Integer updatesCount
+    ) {
+        linkRepository.updateLink(
+            link.id(),
+            checkTime,
+            updatedAt,
+            updatesCount
+        );
     }
 }

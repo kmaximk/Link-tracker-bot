@@ -26,11 +26,11 @@ public class UntrackCommand extends AbstractTextCommand {
     }
 
     @Override
-    public SendMessage handleText(Update update, String message) {
+    public SendMessage handleURI(Update update, URI uri) {
         try {
             LinkResponse linkResponse = scrapperClient.deleteLinks(
                 update.message().chat().id(),
-                new RemoveLinkRequest(URI.create(message))
+                new RemoveLinkRequest(uri)
             );
             return new SendMessage(
                 update.message().chat().id(),

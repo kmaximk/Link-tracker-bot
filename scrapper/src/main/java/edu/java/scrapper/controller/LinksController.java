@@ -4,8 +4,9 @@ import edu.java.dto.AddLinkRequest;
 import edu.java.dto.LinkResponse;
 import edu.java.dto.ListLinksResponse;
 import edu.java.dto.RemoveLinkRequest;
-import edu.java.scrapper.models.Link;
+import edu.java.scrapper.models.LinkModel;
 import edu.java.scrapper.service.LinkService;
+import edu.java.scrapper.service.updaters.Updater;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,8 @@ public class LinksController implements LinksApi {
 
     private final LinkService linkService;
 
+    private final List<Updater> updaters;
+
     @DeleteMapping("/links")
     public ResponseEntity<LinkResponse> linksDelete(
         @RequestHeader(value = "Tg-Chat-Id") Long tgChatId,
@@ -33,7 +36,7 @@ public class LinksController implements LinksApi {
     ) {
 
         log.info("link deleted {}", removeLinkRequest.link());
-        Link link = linkService.remove(tgChatId, removeLinkRequest.link());
+        LinkModel link = linkService.remove(tgChatId, removeLinkRequest.link());
         return ResponseEntity.status(HttpStatus.OK).body(new LinkResponse(tgChatId, link.url()));
     }
 
@@ -55,7 +58,12 @@ public class LinksController implements LinksApi {
         @Valid @RequestBody AddLinkRequest addLinkRequest
     ) {
         log.info("link added {}", addLinkRequest.link());
-        Link link = linkService.add(tgChatId, addLinkRequest.link());
+        LinkModel link = linkService.add(tgChatId, addLinkRequest.link());
+        updaters.forEach(updater -> {
+            if (updater.supports(link.url())) {
+                updater.update(link);
+            }
+        });
         return new ResponseEntity<>(new LinkResponse(tgChatId, link.url()), HttpStatus.OK);
     }
 }

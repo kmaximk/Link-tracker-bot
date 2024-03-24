@@ -46,13 +46,13 @@ public class TrackCommandTest {
     @Test
     public void handleUpdateTest() {
         Utils.fillMockChatId(mockUpdate, mockMessage, mockChat, 5001L);
-        Utils.fillMockText(mockUpdate, mockMessage, "/track https://github.com/");
+        Utils.fillMockText(mockUpdate, mockMessage, "/track https://github.com/owner/repo");
         Map<String, Object> result = trackCommand.handle(mockUpdate).getParameters();
         Long resultChatId = (Long) result.get("chat_id");
 
         assertEquals(5001, resultChatId);
         verify(scrapperClient, times(1)).postLinks(5001L,
-                new AddLinkRequest(URI.create("https://github.com/")));
+                new AddLinkRequest(URI.create("https://github.com/owner/repo")));
     }
 
     @ParameterizedTest

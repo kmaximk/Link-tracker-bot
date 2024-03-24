@@ -1,7 +1,7 @@
 package edu.java.scrapper.domain.jdbc;
 
 import edu.java.scrapper.domain.LinkRepository;
-import edu.java.scrapper.models.Link;
+import edu.java.scrapper.models.LinkModel;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -20,24 +20,24 @@ public class JdbcLinkRepository implements LinkRepository {
     private static final String LINK_BY_URL = "select * from link where url = ?";
 
     @Override
-    public List<Link> findAll() {
+    public List<LinkModel> findAll() {
         return jdbcClient.sql("""
                 select * from link
                 """)
-            .query(Link.class)
+            .query(LinkModel.class)
             .list();
     }
 
     @Override
     @Transactional
-    public Link add(URI uri) {
+    public LinkModel add(URI uri, OffsetDateTime updatedAt, Integer updatesCount) {
         jdbcClient.sql("""
-            insert into link (url, last_check_time, updated_at)
-            values(?, current_timestamp, current_timestamp);
-            """).params(uri.toString()).update();
+            insert into link (url, last_check_time, updated_at, updates_count)
+            values(?, current_timestamp, ?, ?);
+            """).params(uri.toString(), updatedAt, updatesCount).update();
         return jdbcClient.sql(LINK_BY_URL)
             .param(uri.toString())
-            .query(Link.class)
+            .query(LinkModel.class)
             .single();
     }
 
@@ -50,18 +50,18 @@ public class JdbcLinkRepository implements LinkRepository {
     }
 
     @Override
-    public Optional<Link> findLink(URI url) {
+    public Optional<LinkModel> findLink(URI url) {
         return jdbcClient.sql(LINK_BY_URL)
             .param(url.toString())
-            .query(Link.class)
+            .query(LinkModel.class)
             .optional();
     }
 
     @Override
     @Transactional
-    public void updateLink(Long linkID, OffsetDateTime checkTime, OffsetDateTime updatedAt) {
-        jdbcClient.sql("update link set last_check_time = ?, updated_at = ? where id = ?")
-            .params(checkTime, updatedAt, linkID)
+    public void updateLink(Long linkID, OffsetDateTime checkTime, OffsetDateTime updatedAt, Integer updatesCount) {
+        jdbcClient.sql("update link set last_check_time = ?, updated_at = ?, updates_count = ? where id = ?")
+            .params(checkTime, updatedAt, updatesCount, linkID)
             .update();
     }
 }

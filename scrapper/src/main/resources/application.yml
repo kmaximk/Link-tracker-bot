@@ -4,19 +4,20 @@ app:
   scheduler:
     enable: true
     interval: 10s
-    force-check-delay: 300s
+    force-check-delay: 100s
   bot-api-uri: http://localhost:8090
+  database-access-type: jooq
 
 spring:
   application:
     name: scrapper
   datasource:
+    driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/scrapper
     username: postgres
     password: postgres
   liquibase:
     enabled: false
-
 server:
   port: 9191
 

@@ -11,6 +11,9 @@ public record GitHubResponse(
     OffsetDateTime updatedAt,
 
     @JsonProperty("pushed_at")
-    OffsetDateTime pushedAt
+    OffsetDateTime pushedAt,
+
+    @JsonProperty("open_issues_count")
+    Integer openIssuesCount
 ) {
 }

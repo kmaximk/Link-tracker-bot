@@ -24,10 +24,10 @@ public class TrackCommand extends AbstractTextCommand {
     }
 
     @Override
-    public SendMessage handleText(Update update, String message) {
+    public SendMessage handleURI(Update update, URI uri) {
         scrapperClient.postLinks(
             update.message().chat().id(),
-            new AddLinkRequest(URI.create(message))
+            new AddLinkRequest(uri)
         );
         return new SendMessage(update.message().chat().id(), "Link added to tracked\n");
     }

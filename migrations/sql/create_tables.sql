@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS link
 
     updated_at      timestamp with time zone not null,
 
+    updates_count int,
+
     primary key (id),
     unique (url)
 );

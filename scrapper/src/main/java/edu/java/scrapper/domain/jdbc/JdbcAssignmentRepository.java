@@ -1,7 +1,7 @@
 package edu.java.scrapper.domain.jdbc;
 
 import edu.java.scrapper.domain.AssignmentRepository;
-import edu.java.scrapper.models.Link;
+import edu.java.scrapper.models.LinkModel;
 import java.sql.Types;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,13 +24,13 @@ public class JdbcAssignmentRepository implements AssignmentRepository {
     }
 
     @Override
-    public List<Link> findLinksByChat(Long chatID) {
+    public List<LinkModel> findLinksByChat(Long chatID) {
         return jdbcClient.sql("""
                 select * from link where id in
                 (select link_id from assignment where chat_id = ?)
                 """)
             .param(1, chatID, Types.BIGINT)
-            .query(Link.class)
+            .query(LinkModel.class)
             .list();
     }
 
@@ -50,7 +50,7 @@ public class JdbcAssignmentRepository implements AssignmentRepository {
     }
 
     @Override
-    public boolean linkIsTracked(Link link, Long userID) {
+    public boolean linkIsTracked(LinkModel link, Long userID) {
         return jdbcClient.sql("""
                 select count(*) from assignment where chat_id = ? and link_id = ?
                 """)
@@ -60,10 +60,10 @@ public class JdbcAssignmentRepository implements AssignmentRepository {
     }
 
     @Override
-    public List<Link> getOutdatedLinks(Long interval) {
+    public List<LinkModel> getOutdatedLinks(Long interval) {
         return jdbcClient.sql("select * from link "
                 + "where last_check_time < current_timestamp - interval '" + interval + " second'")
-            .query(Link.class)
+            .query(LinkModel.class)
             .list();
     }
 }

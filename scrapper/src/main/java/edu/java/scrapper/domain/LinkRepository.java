@@ -1,19 +1,19 @@
 package edu.java.scrapper.domain;
 
-import edu.java.scrapper.models.Link;
+import edu.java.scrapper.models.LinkModel;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface LinkRepository {
-    List<Link> findAll();
+    List<LinkModel> findAll();
 
-    Link add(URI uri);
+    LinkModel add(URI uri, OffsetDateTime updatedAt, Integer updatesCount);
 
     int remove(URI uri);
 
-    Optional<Link> findLink(URI url);
+    Optional<LinkModel> findLink(URI url);
 
-    void updateLink(Long linkID, OffsetDateTime checkTime, OffsetDateTime updatedAt);
+    void updateLink(Long linkID, OffsetDateTime checkTime, OffsetDateTime updatedAt, Integer updatesCount);
 }
