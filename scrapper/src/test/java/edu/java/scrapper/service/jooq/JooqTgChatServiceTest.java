@@ -6,10 +6,12 @@ import edu.java.scrapper.models.LinkModel;
 import edu.java.scrapper.repository.IntegrationEnvironment;
 import edu.java.scrapper.service.updaters.Updater;
 import org.jooq.DSLContext;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.util.Collections;
@@ -18,20 +20,23 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
+@Sql(value = "classpath:sql/cleanDB.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class JooqTgChatServiceTest extends IntegrationEnvironment {
 
-    @Autowired
     private JooqTgChatService tgChatService;
 
     @Autowired
     private DSLContext context;
 
-    @Autowired
     private JooqLinkService linkService;
 
+    @BeforeEach
+    public void init() {
+        tgChatService = new JooqTgChatService(context);
+        linkService = new JooqLinkService(context);
+    }
+
     @Test
-    @Rollback
     void addChatTest() {
         tgChatService.register(1000);
         assertEquals(1, context.fetchCount(Chat.CHAT, Chat.CHAT.ID.eq(1000L)));
@@ -40,7 +45,6 @@ public class JooqTgChatServiceTest extends IntegrationEnvironment {
     }
 
     @Test
-    @Rollback
     void removeChatNotFoundTest() {
         tgChatService.register(1000);
         tgChatService.unregister(1000);
@@ -48,7 +52,6 @@ public class JooqTgChatServiceTest extends IntegrationEnvironment {
     }
 
     @Test
-    @Rollback
     void getChatsByLinkTest() {
         List<Long> chats = List.of(999L, 1000L, 1001L, 1002L);
         URI link = URI.create("https://github.com/owner/repo");

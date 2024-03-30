@@ -1,5 +1,6 @@
 package edu.java.scrapper.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -39,7 +40,7 @@ public class Link {
     @Column(name = "updates_count")
     private Integer updatesCount;
 
-    @ManyToMany(mappedBy = "linkList")
+    @ManyToMany(mappedBy = "linkList", cascade = CascadeType.PERSIST)
     private List<Chat> chatList;
 
     public Link(

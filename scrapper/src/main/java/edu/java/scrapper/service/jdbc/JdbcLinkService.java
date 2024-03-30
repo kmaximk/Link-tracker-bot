@@ -61,4 +61,9 @@ public class JdbcLinkService implements LinkService {
             updatesCount
         );
     }
+
+    @Override
+    public List<LinkModel> getOutdatedLinks(Long interval) {
+        return assignmentRepository.getOutdatedLinks(interval);
+    }
 }

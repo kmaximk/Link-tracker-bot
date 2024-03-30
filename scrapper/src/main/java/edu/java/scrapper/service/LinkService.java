@@ -16,4 +16,6 @@ public interface LinkService {
         LinkModel link, OffsetDateTime checkTime, OffsetDateTime updatedAt,
         Integer updatesCount
     );
+
+    List<LinkModel> getOutdatedLinks(Long interval);
 }

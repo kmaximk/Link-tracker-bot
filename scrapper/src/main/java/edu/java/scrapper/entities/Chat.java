@@ -1,5 +1,6 @@
 package edu.java.scrapper.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -21,7 +22,7 @@ public class Chat {
     @Column(name = "id")
     private Long id;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
         name = "assignment",
         joinColumns = @JoinColumn(name = "chat_id"),

@@ -31,14 +31,13 @@ public class JpaLinkService implements LinkService {
         Chat chat = chatRepository.findById(tgChatId).orElseThrow();
         Link link = linkRepository.findByUrl(url).orElseGet(() -> linkRepository.save(
             new Link(url, OffsetDateTime.now(), OffsetDateTime.now(), 1)));
-        if (chat.getLinkList().contains(link)) {
+        if (chat.getLinkList().stream().anyMatch(l -> l.getId().equals(link.getId()))) {
             throw new ReAddingLinkException(String.format("Link %s is already tracked", link.getUrl()));
         }
         if (link.getChatList() != null) {
             link.getChatList().add(chat);
         }
         chat.getLinkList().add(link);
-        linkRepository.save(link);
         chatRepository.save(chat);
         return convertToModel(link);
     }
@@ -48,15 +47,10 @@ public class JpaLinkService implements LinkService {
     public LinkModel remove(long tgChatId, URI url) {
         Link link = linkRepository.findByUrl(url).orElseThrow(
             () -> new LinkNotFoundException(String.format(LINK_NOT_TRACKED, url)));
-        Optional<Chat> chat = chatRepository.findById(tgChatId);
-        if (chat.isPresent()) {
-            Chat chatValue = chat.get();
-            if (!link.getChatList().remove(chatValue) || !chatValue.getLinkList().remove(link)) {
-                throw new LinkNotFoundException(String.format(LINK_NOT_TRACKED, url));
-            }
-            linkRepository.save(link);
-            chatRepository.save(chatValue);
+        if (!link.getChatList().removeIf(c -> c.getId().equals(tgChatId))) {
+            throw new LinkNotFoundException(String.format(LINK_NOT_TRACKED, url));
         }
+        linkRepository.save(link);
         return convertToModel(link);
     }
 
@@ -69,6 +63,7 @@ public class JpaLinkService implements LinkService {
     }
 
     @Override
+    @Transactional
     public void updateLink(
         LinkModel link,
         OffsetDateTime checkTime,
@@ -80,6 +75,15 @@ public class JpaLinkService implements LinkService {
         foundLink.setUpdatedAt(updatedAt);
         foundLink.setUpdatesCount(updatesCount);
         linkRepository.save(foundLink);
+    }
+
+    @Override
+    @Transactional
+    public List<LinkModel> getOutdatedLinks(Long interval) {
+        return linkRepository.findOutdatedLinks(interval)
+            .stream()
+            .map(this::convertToModel)
+            .toList();
     }
 
     private LinkModel convertToModel(Link link) {

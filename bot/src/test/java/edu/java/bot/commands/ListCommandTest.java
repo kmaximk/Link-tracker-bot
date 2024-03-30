@@ -73,22 +73,6 @@ public class ListCommandTest {
         }
     }
 
-//    @Test
-//    public void handleNoUserTest() {
-//        Utils.fillMockChatId(mockUpdate, mockMessage, mockChat, 5001L);
-//        when(scrapperClient.getLinks(5001L)).thenReturn(
-//            new ListLinksResponse()
-//        );
-//
-//        Map<String, Object> result = listCommand.handle(mockUpdate).getParameters();
-//        List<String> textResult = ((String) result.get("text")).lines().toList();
-//        Long resultChatId = (Long) result.get("chat_id");
-//
-//        assertEquals(5001, resultChatId);
-//        assertEquals(1, textResult.size());
-//        assertFalse(textResult.getFirst().isBlank());
-//    }
-
     @Test
     public void handleNoLinksTest() {
 

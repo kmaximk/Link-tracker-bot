@@ -79,4 +79,11 @@ public class JooqLinkService implements LinkService {
             .where(LINK.ID.eq(link.id()))
             .execute();
     }
+
+    @Override
+    public List<LinkModel> getOutdatedLinks(Long interval) {
+        return context.selectFrom(LINK)
+            .where(LINK.LAST_CHECK_TIME.le(OffsetDateTime.now().minusSeconds(interval)))
+            .fetchInto(LinkModel.class);
+    }
 }

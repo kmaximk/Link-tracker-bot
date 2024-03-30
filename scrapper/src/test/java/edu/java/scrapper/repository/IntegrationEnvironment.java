@@ -34,7 +34,7 @@ public abstract class IntegrationEnvironment {
         }
     }
 
-    private static void runMigrations() throws Exception {
+    public static void runMigrations() throws Exception {
         Path migrationsPath =
             new File(".").toPath().toAbsolutePath().
                 getParent().getParent().
