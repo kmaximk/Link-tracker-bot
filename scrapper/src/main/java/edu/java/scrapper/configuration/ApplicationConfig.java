@@ -20,7 +20,10 @@ public record ApplicationConfig(
     String stackOverflowApiUri,
 
     @DefaultValue("http://localhost:8090")
-    String botApiUri
+    String botApiUri,
+
+    @NotNull
+    AccessType databaseAccessType
 ) {
     @Bean
     private long schedulerDelay() {
@@ -28,5 +31,10 @@ public record ApplicationConfig(
     }
 
     public record Scheduler(boolean enable, @NotNull Duration interval, @NotNull Duration forceCheckDelay) {
+    }
+
+    public enum AccessType {
+        JDBC, JPA,
+        JOOQ
     }
 }

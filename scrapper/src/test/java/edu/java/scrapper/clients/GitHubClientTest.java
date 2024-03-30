@@ -1,4 +1,4 @@
-package edu.java.scrapper;
+package edu.java.scrapper.clients;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
@@ -41,11 +41,13 @@ public class GitHubClientTest {
                       "private": false,
                       "created_at": "2011-01-26T19:01:12Z",
                       "updated_at": "2024-02-23T19:58:00Z",
-                      "pushed_at": "2024-02-23T12:43:59Z"
+                      "pushed_at": "2024-02-23T12:43:59Z",
+                      "open_issues_count": 10
                     }""")));
         GitHubResponse response = gitHubClient.getRepositoryInfo("octocat", "Hello-World");
         assertEquals(OffsetDateTime.parse("2024-02-23T19:58:00Z"), response.updatedAt());
         assertEquals(OffsetDateTime.parse("2011-01-26T19:01:12Z"), response.createdAt());
         assertEquals(OffsetDateTime.parse("2024-02-23T12:43:59Z"), response.pushedAt());
+        assertEquals(10, response.openIssuesCount());
     }
 }

@@ -9,7 +9,9 @@ CREATE TABLE IF NOT EXISTS link
 
     last_check_time timestamp with time zone not null,
 
-    created_at      timestamp with time zone not null,
+    updated_at      timestamp with time zone not null,
+
+    updates_count int,
 
     primary key (id),
     unique (url)

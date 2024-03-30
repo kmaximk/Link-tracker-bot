@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.reactive.function.client.WebClientException;
 
 @RestControllerAdvice(
     basePackageClasses = {LinksController.class, TgChatController.class},
@@ -43,6 +44,11 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(value = {ReRegistrationException.class})
     protected ResponseEntity<ApiErrorResponse> handleReRegistration(ReRegistrationException ex) {
         return formResponse(ex, "Re-registration chat", HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(value = {WebClientException.class})
+    protected ResponseEntity<ApiErrorResponse> handleException(WebClientException ex) {
+        return formResponse(ex, ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<ApiErrorResponse> formResponse(Throwable ex, String description, HttpStatus code) {

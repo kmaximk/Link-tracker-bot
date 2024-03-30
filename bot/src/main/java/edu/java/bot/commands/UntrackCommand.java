@@ -2,13 +2,17 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.Repository;
+import edu.java.bot.clients.ScrapperClient;
+import edu.java.bot.clients.ScrapperResponseException;
+import edu.java.dto.LinkResponse;
+import edu.java.dto.RemoveLinkRequest;
+import java.net.URI;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UntrackCommand extends AbstractTextCommand {
-    public UntrackCommand(Repository repository) {
-        super(repository);
+    public UntrackCommand(ScrapperClient scrapperClient) {
+        super(scrapperClient);
     }
 
     @Override
@@ -22,11 +26,21 @@ public class UntrackCommand extends AbstractTextCommand {
     }
 
     @Override
-    public SendMessage handleText(Update update, String message) {
-        boolean ok = repository.remove(update.message().chat().id(), message);
-        if (!ok) {
-            return new SendMessage(update.message().chat().id(), "Link not found\n");
+    public SendMessage handleURI(Update update, URI uri) {
+        try {
+            LinkResponse linkResponse = scrapperClient.deleteLinks(
+                update.message().chat().id(),
+                new RemoveLinkRequest(uri)
+            );
+            return new SendMessage(
+                update.message().chat().id(),
+                String.format(
+                    "Link removed from tracked %s\n",
+                    linkResponse.url().toString()
+                )
+            );
+        } catch (ScrapperResponseException e) {
+            return new SendMessage(update.message().chat().id(), e.getApiErrorResponse().description());
         }
-        return new SendMessage(update.message().chat().id(), "Link removed from tracked\n");
     }
 }

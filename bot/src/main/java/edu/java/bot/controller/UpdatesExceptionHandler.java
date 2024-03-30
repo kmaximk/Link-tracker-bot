@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class UpdatesExceptionHandler {
 
     @ExceptionHandler(value = {MethodArgumentNotValidException.class})
-    protected ResponseEntity<ApiErrorResponse> handleNullPointerException(MethodArgumentNotValidException ex) {
+    protected ResponseEntity<ApiErrorResponse> handleArgumentNotValidException(MethodArgumentNotValidException ex) {
         log.error("MethodArgumentNotValidException", ex);
         List<String> stackTraceElements = Arrays.stream(ex.getStackTrace()).map(StackTraceElement::toString).toList();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)

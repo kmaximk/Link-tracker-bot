@@ -2,13 +2,15 @@ package edu.java.bot.commands;
 
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import edu.java.bot.Repository;
+import edu.java.bot.clients.ScrapperClient;
+import edu.java.dto.AddLinkRequest;
+import java.net.URI;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TrackCommand extends AbstractTextCommand {
-    public TrackCommand(Repository repository) {
-        super(repository);
+    public TrackCommand(ScrapperClient scrapperClient) {
+        super(scrapperClient);
     }
 
     @Override
@@ -22,8 +24,11 @@ public class TrackCommand extends AbstractTextCommand {
     }
 
     @Override
-    public SendMessage handleText(Update update, String message) {
-        repository.put(update.message().chat().id(), message);
+    public SendMessage handleURI(Update update, URI uri) {
+        scrapperClient.postLinks(
+            update.message().chat().id(),
+            new AddLinkRequest(uri)
+        );
         return new SendMessage(update.message().chat().id(), "Link added to tracked\n");
     }
 }

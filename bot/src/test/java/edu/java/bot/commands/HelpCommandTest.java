@@ -3,11 +3,11 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.Repository;
 import edu.java.bot.Utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import edu.java.bot.clients.ScrapperClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,15 +33,15 @@ public class HelpCommandTest {
     Chat mockChat;
 
     @Mock
-    Repository mockRepository;
+    ScrapperClient scrapperClient;
 
     @BeforeEach
     public void setup() {
         helpCommand = new HelpCommand(new ArrayList<>(List.of(
-            new ListCommand(mockRepository),
-            new StartCommand(mockRepository),
-            new TrackCommand(mockRepository),
-            new UntrackCommand(mockRepository)
+            new ListCommand(scrapperClient),
+            new StartCommand(scrapperClient),
+            new TrackCommand(scrapperClient),
+            new UntrackCommand(scrapperClient)
         )));
     }
 

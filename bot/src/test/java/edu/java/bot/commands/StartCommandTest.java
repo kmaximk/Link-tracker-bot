@@ -3,9 +3,9 @@ package edu.java.bot.commands;
 import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
-import edu.java.bot.Repository;
 import edu.java.bot.Utils;
 import java.util.Map;
+import edu.java.bot.clients.ScrapperClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,11 +33,11 @@ public class StartCommandTest {
     Chat mockChat;
 
     @Mock
-    Repository mockRepository;
+    ScrapperClient scrapperClient;
 
     @BeforeEach
     public void setup() {
-        startCommand = new StartCommand(mockRepository);
+        startCommand = new StartCommand(scrapperClient);
     }
 
     @Test
@@ -47,7 +47,7 @@ public class StartCommandTest {
         Long resultChatId = (Long) result.get("chat_id");
 
         assertEquals(5001L, resultChatId);
-        verify(mockRepository, times(1)).register(5001L);
+        verify(scrapperClient, times(1)).registerTgChat(5001L);
     }
 
     @Test
