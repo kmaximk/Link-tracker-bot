@@ -8,6 +8,9 @@ import java.time.OffsetDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
@@ -15,6 +18,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @WireMockTest
+@SpringBootTest
 public class GitHubClientTest {
 
     @RegisterExtension
@@ -23,9 +27,13 @@ public class GitHubClientTest {
 
 
     private GitHubClient gitHubClient;
+
+    @Autowired
+    private RetryTemplate retryTemplate;
+
     @BeforeEach
     public void setup() {
-        gitHubClient = new GitHubClient(WebClient.builder(), wireMockExtension.baseUrl());
+        gitHubClient = new GitHubClient(WebClient.builder(), wireMockExtension.baseUrl(), retryTemplate);
     }
 
 

@@ -8,6 +8,9 @@ import java.net.URI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
@@ -17,6 +20,7 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMoc
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @WireMockTest
+@SpringBootTest
 public class ScrapperClientTest {
 
     @RegisterExtension
@@ -25,9 +29,12 @@ public class ScrapperClientTest {
 
     private ScrapperClient scrapperClient;
 
+    @Autowired
+    private RetryTemplate retryTemplate;
+
     @BeforeEach
     public void setup() {
-        scrapperClient = new ScrapperClient(WebClient.builder(), wireMockExtension.baseUrl());
+        scrapperClient = new ScrapperClient(WebClient.builder(), wireMockExtension.baseUrl(), retryTemplate);
     }
 
     @Test

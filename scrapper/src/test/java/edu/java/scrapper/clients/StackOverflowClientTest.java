@@ -1,6 +1,7 @@
 package edu.java.scrapper.clients;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowResponse;
 import java.time.Instant;
@@ -9,12 +10,18 @@ import java.time.ZoneOffset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+
+@WireMockTest
+@SpringBootTest
 public class StackOverflowClientTest {
 
     @RegisterExtension
@@ -22,9 +29,14 @@ public class StackOverflowClientTest {
         WireMockExtension.newInstance().options(wireMockConfig().dynamicPort()).build();
 
     private StackOverflowClient stackOverflowClient;
+
+    @Autowired
+    private RetryTemplate retryTemplate;
+
     @BeforeEach
     public void setup() {
-        stackOverflowClient = new StackOverflowClient(WebClient.builder(), wireMockExtension.baseUrl());
+        stackOverflowClient = new StackOverflowClient(WebClient.builder(),
+            wireMockExtension.baseUrl(), retryTemplate);
     }
 
     @Test

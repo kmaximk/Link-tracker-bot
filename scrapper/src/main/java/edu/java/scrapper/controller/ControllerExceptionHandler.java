@@ -55,7 +55,7 @@ public class ControllerExceptionHandler {
         log.error(description, ex);
         List<String> stackTraceElements = Arrays.stream(ex.getStackTrace()).map(StackTraceElement::toString).toList();
         return ResponseEntity.status(code).body(
-            new ApiErrorResponse(description, code.toString(),
+            new ApiErrorResponse(description, code.value(),
                 ex.getClass().getName(), ex.getMessage(), stackTraceElements
             ));
     }

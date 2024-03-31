@@ -1,6 +1,12 @@
 app:
   telegram-token: ${TELEGRAM_TOKEN}
   scrapper-api-uri: http://localhost:9191
+  retry:
+    backoff: linear
+    limit: 4
+    interval: 2
+    codes: 500, 404
+    max-interval: 40
 
 spring:
   application:

@@ -1,4 +1,4 @@
-package edu.java.scrapper.configuration;
+package edu.java.scrapper.configuration.repositories;
 
 import edu.java.scrapper.domain.jdbc.JdbcAssignmentRepository;
 import edu.java.scrapper.domain.jdbc.JdbcChatRepository;
