@@ -80,12 +80,6 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.16.1</version>
         </dependency>
-        <dependency>
-            <groupId>edu.java</groupId>
-            <artifactId>common</artifactId>
-            <version>0.1</version>
-            <scope>compile</scope>
-        </dependency>
 
         <!-- Database -->
         <dependency>
@@ -165,6 +159,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>edu.java</groupId>
+            <artifactId>common</artifactId>
+            <version>0.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

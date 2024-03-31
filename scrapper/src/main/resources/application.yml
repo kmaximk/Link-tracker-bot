@@ -6,7 +6,7 @@ app:
     interval: 1000s
     force-check-delay: 100s
   bot-api-uri: http://localhost:8090
-  database-access-type: jpa
+  database-access-type: jooq
   limit:
     tokens: 1000
     interval: 1h
