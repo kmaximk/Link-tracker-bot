@@ -2,13 +2,14 @@ package edu.java.scrapper.clients.botclient;
 
 import edu.java.dto.ApiErrorResponse;
 import edu.java.dto.LinkUpdateRequest;
+import edu.java.scrapper.service.sender.UpdateSender;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-public class BotClient {
+public class BotClient implements UpdateSender {
 
     private final WebClient webClient;
 
@@ -19,6 +20,7 @@ public class BotClient {
         this.retryTemplate = retryTemplate;
     }
 
+    @Override
     public void sendUpdates(LinkUpdateRequest linkUpdateRequest) {
         retryTemplate.execute(context -> this.webClient.post()
             .uri("/updates")

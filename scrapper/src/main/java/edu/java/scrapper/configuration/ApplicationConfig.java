@@ -31,7 +31,13 @@ public record ApplicationConfig(
     RateLimit limit,
 
     @NotNull
-    Retry retry
+    Retry retry,
+
+    @NotNull
+    Boolean useQueue,
+
+    @NotNull
+    KafkaConfig kafka
 ) {
     @Bean
     private long schedulerDelay() {
@@ -63,6 +69,13 @@ public record ApplicationConfig(
     public record Retry(@NotEmpty String backoff, @NotNull Integer limit, @NotNull Integer interval,
                         List<Integer> codes,
                         Integer maxInterval) {
+
+    }
+
+    public record KafkaConfig(@NotEmpty String servers,
+                              @NotEmpty String trustedPackages,
+                              @NotEmpty String consumerGroup,
+                              @NotEmpty String updatesTopic) {
 
     }
 }

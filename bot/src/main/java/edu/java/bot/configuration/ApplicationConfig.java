@@ -18,7 +18,11 @@ public record ApplicationConfig(
     String scrapperApiUri,
 
     @NotNull
-    Retry retry
+    Retry retry,
+
+    @NotNull
+    KafkaConfig kafka
+
 ) {
 
     @Bean
@@ -29,6 +33,13 @@ public record ApplicationConfig(
     public record Retry(@NotEmpty String backoff, @NotNull Integer limit, @NotNull Integer interval,
                         List<Integer> codes,
                         Integer maxInterval) {
+
+    }
+
+    public record KafkaConfig(@NotEmpty String servers,
+                              @NotEmpty String trustedPackages,
+                              @NotEmpty String consumerGroup,
+                              @NotEmpty String updatesTopic) {
 
     }
 }
