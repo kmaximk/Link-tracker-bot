@@ -15,15 +15,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LinkUpdaterScheduler {
 
-
     private final ApplicationConfig config;
 
     private final LinkService linkService;
 
     private final List<Updater> updaters;
-
-//    private final ScrapperQueueProducer scrapperQueueProducer;
-
 
     @Scheduled(fixedDelayString = "#{@schedulerDelay}")
     public void update() {
@@ -31,9 +27,6 @@ public class LinkUpdaterScheduler {
             config.scheduler().forceCheckDelay().getSeconds()
         );
         log.info("Links updated {}", links);
-//        scrapperStringProducer.send("updated dkfadlf");
-//        scrapperQueueProducer.send(new LinkUpdateRequest(2132L,
-//            URI.create("https://e.mail.ru/inbox/"), "Updated", List.of(5375431958L)));
         for (LinkModel link : links) {
             updaters.forEach(updater -> {
                 if (updater.supports(link.url())) {
