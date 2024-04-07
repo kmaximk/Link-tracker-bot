@@ -1,6 +1,5 @@
 package edu.java.bot.controller;
 
-import com.pengrad.telegrambot.TelegramBot;
 import edu.java.bot.service.UserNotifier;
 import edu.java.dto.LinkUpdateRequest;
 import jakarta.validation.Valid;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Slf4j
 public class UpdatesController implements UpdatesApi {
-
-    private final TelegramBot bot;
 
     private final UserNotifier userNotifier;
 
