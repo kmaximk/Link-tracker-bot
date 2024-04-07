@@ -21,8 +21,9 @@ public class UpdatesExceptionHandler {
         log.error("MethodArgumentNotValidException", ex);
         List<String> stackTraceElements = Arrays.stream(ex.getStackTrace()).map(StackTraceElement::toString).toList();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(new ApiErrorResponse("Некорректные параметры запроса",
-                ex.getStatusCode().toString(),
+            .body(new ApiErrorResponse(
+                "Некорректные параметры запроса",
+                ex.getStatusCode().value(),
                 ex.getClass().getName(),
                 ex.getMessage(),
                 stackTraceElements

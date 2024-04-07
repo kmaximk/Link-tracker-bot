@@ -1,6 +1,7 @@
 package edu.java.scrapper.clients;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
+import com.github.tomakehurst.wiremock.junit5.WireMockTest;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowResponse;
 import java.time.Instant;
@@ -9,12 +10,14 @@ import java.time.ZoneOffset;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@WireMockTest
 public class StackOverflowClientTest {
 
     @RegisterExtension
@@ -22,9 +25,14 @@ public class StackOverflowClientTest {
         WireMockExtension.newInstance().options(wireMockConfig().dynamicPort()).build();
 
     private StackOverflowClient stackOverflowClient;
+
+    private final RetryTemplate retryTemplate = new RetryTemplate();
+
     @BeforeEach
     public void setup() {
-        stackOverflowClient = new StackOverflowClient(WebClient.builder(), wireMockExtension.baseUrl());
+        stackOverflowClient = new StackOverflowClient(WebClient.builder(),
+            wireMockExtension.baseUrl(), retryTemplate
+        );
     }
 
     @Test
@@ -70,9 +78,18 @@ public class StackOverflowClientTest {
         StackOverflowResponse response = stackOverflowClient.getQuestionUpdate("30080855");
 
         assertEquals(6, response.answerCount());
-        assertEquals(OffsetDateTime.ofInstant(Instant.ofEpochSecond(1430925349), ZoneOffset.UTC), response.creationDate());
-        assertEquals(OffsetDateTime.ofInstant(Instant.ofEpochSecond(1661178318), ZoneOffset.UTC), response.lastActivityDate());
-        assertEquals(OffsetDateTime.ofInstant(Instant.ofEpochSecond(1616369850), ZoneOffset.UTC), response.lastEditDate());
+        assertEquals(
+            OffsetDateTime.ofInstant(Instant.ofEpochSecond(1430925349), ZoneOffset.UTC),
+            response.creationDate()
+        );
+        assertEquals(
+            OffsetDateTime.ofInstant(Instant.ofEpochSecond(1661178318), ZoneOffset.UTC),
+            response.lastActivityDate()
+        );
+        assertEquals(
+            OffsetDateTime.ofInstant(Instant.ofEpochSecond(1616369850), ZoneOffset.UTC),
+            response.lastEditDate()
+        );
 
     }
 }

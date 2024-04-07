@@ -3,14 +3,14 @@ package edu.java.dto;
 import java.util.List;
 
 public record ApiErrorResponse(
-     String description,
+    String description,
 
-     String code,
+    Integer code,
 
-     String exceptionName,
+    String exceptionName,
 
-     String exceptionMessage,
+    String exceptionMessage,
 
-     List<String> stacktrace
+    List<String> stacktrace
 ) {
 }

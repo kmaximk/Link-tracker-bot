@@ -1,4 +1,4 @@
-package edu.java.scrapper.configuration;
+package edu.java.scrapper.configuration.repositories;
 
 import edu.java.scrapper.domain.jpa.JpaLinkRepository;
 import edu.java.scrapper.domain.jpa.JpaTgChatRepository;
