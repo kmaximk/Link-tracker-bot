@@ -2,7 +2,6 @@ package edu.java.scrapper.configuration.kafka;
 
 import edu.java.dto.LinkUpdateRequest;
 import edu.java.scrapper.configuration.ApplicationConfig;
-import edu.java.scrapper.service.sender.ScrapperQueueProducer;
 import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.IntegerSerializer;
@@ -22,7 +21,7 @@ public class KafkaConfig {
             ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, config.kafka().servers(),
             ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, IntegerSerializer.class,
             ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class,
-            ProducerConfig.ACKS_CONFIG, "all"
+            ProducerConfig.ACKS_CONFIG, config.kafka().ackMode()
         )));
     }
 }

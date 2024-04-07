@@ -22,6 +22,7 @@ app:
     trusted-packages: edu.java.dto
     consumer-group: messages-group
     updates-topic: updates.json
+    ack-mode: all
 
 spring:
   application:

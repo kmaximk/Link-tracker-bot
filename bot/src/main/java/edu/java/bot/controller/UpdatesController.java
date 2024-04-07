@@ -1,7 +1,6 @@
 package edu.java.bot.controller;
 
 import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.service.UserNotifier;
 import edu.java.dto.LinkUpdateRequest;
 import jakarta.validation.Valid;

@@ -17,12 +17,15 @@ public class MessagesKafkaListener {
 
     private final UserNotifier userNotifier;
 
-
     @KafkaListener(topics = "${app.kafka.updates-topic}",
                    groupId = "${app.kafka.consumer-group}",
                    containerFactory = "messageListenerContainerFactory",
-                   concurrency = "1")
-    public void listenStringMessages(@Payload LinkUpdateRequest message, @Header(KafkaHeaders.RECEIVED_KEY) Integer key, @Header(KafkaHeaders.RECEIVED_PARTITION) int partition) {
+                   concurrency = "${app.kafka.concurrency}")
+    public void listenStringMessages(
+        @Payload LinkUpdateRequest message,
+        @Header(KafkaHeaders.RECEIVED_KEY) Integer key,
+        @Header(KafkaHeaders.RECEIVED_PARTITION) int partition
+    ) {
         log.info("Received Message from partition {} with key {}: {}", partition, key, message);
         userNotifier.sendUpdateToUser(message);
     }

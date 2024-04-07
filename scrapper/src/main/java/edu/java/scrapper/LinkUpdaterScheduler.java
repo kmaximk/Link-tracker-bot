@@ -3,7 +3,6 @@ package edu.java.scrapper;
 import edu.java.scrapper.configuration.ApplicationConfig;
 import edu.java.scrapper.models.LinkModel;
 import edu.java.scrapper.service.LinkService;
-import edu.java.scrapper.service.sender.ScrapperQueueProducer;
 import edu.java.scrapper.service.updaters.Updater;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

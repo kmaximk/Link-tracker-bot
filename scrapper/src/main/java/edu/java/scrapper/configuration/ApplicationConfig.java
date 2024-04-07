@@ -75,7 +75,8 @@ public record ApplicationConfig(
     public record KafkaConfig(@NotEmpty String servers,
                               @NotEmpty String trustedPackages,
                               @NotEmpty String consumerGroup,
-                              @NotEmpty String updatesTopic) {
+                              @NotEmpty String updatesTopic,
+                              @NotEmpty String ackMode) {
 
     }
 }

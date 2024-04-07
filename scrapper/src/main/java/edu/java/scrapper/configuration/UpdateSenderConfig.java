@@ -16,7 +16,11 @@ public class UpdateSenderConfig {
 
     @Bean
     @ConditionalOnProperty(prefix = "app", name = "use-queue", havingValue = "true")
-    public UpdateSender scrapperQueueProducer(KafkaTemplate<Integer, LinkUpdateRequest> kafkaTemplate, ApplicationConfig config) {
+    public UpdateSender scrapperQueueProducer(
+        KafkaTemplate<Integer,
+            LinkUpdateRequest> kafkaTemplate,
+        ApplicationConfig config
+    ) {
         return new ScrapperQueueProducer(kafkaTemplate, config.kafka());
     }
 

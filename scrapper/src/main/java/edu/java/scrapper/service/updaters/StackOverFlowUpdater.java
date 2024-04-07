@@ -1,17 +1,15 @@
 package edu.java.scrapper.service.updaters;
 
 import edu.java.dto.LinkUpdateRequest;
-import edu.java.scrapper.clients.botclient.BotClient;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowResponse;
 import edu.java.scrapper.models.LinkModel;
 import edu.java.scrapper.service.LinkService;
 import edu.java.scrapper.service.TgChatService;
+import edu.java.scrapper.service.sender.UpdateSender;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.List;
-import edu.java.scrapper.service.sender.ScrapperQueueProducer;
-import edu.java.scrapper.service.sender.UpdateSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
