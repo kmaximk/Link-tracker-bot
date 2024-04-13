@@ -3,10 +3,11 @@ app:
   stackoverflow-api-uri: https://api.stackexchange.com/2.3
   scheduler:
     enable: true
-    interval: 1000s
+    interval: 60s
     force-check-delay: 100s
   bot-api-uri: http://localhost:8090
   database-access-type: jooq
+  use-queue: true
   limit:
     tokens: 1000
     interval: 1h
@@ -16,6 +17,12 @@ app:
     interval: 2
     codes: 500, 404
     max-interval: 40
+  kafka:
+    servers: localhost:9092,localhost:9093,localhost:9094
+    trusted-packages: edu.java.dto
+    consumer-group: messages-group
+    updates-topic: updates.json
+    ack-mode: all
 
 spring:
   application:

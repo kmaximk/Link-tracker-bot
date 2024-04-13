@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class LinkUpdaterScheduler {
 
-
     private final ApplicationConfig config;
 
     private final LinkService linkService;

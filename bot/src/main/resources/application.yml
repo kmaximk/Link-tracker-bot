@@ -3,10 +3,18 @@ app:
   scrapper-api-uri: http://localhost:9191
   retry:
     backoff: linear
-    limit: 4
-    interval: 2
+    limit: 60
+    interval: 60
     codes: 500, 404
     max-interval: 40
+  kafka:
+    servers: localhost:9092,localhost:9093,localhost:9094
+    trusted-packages: edu.java.dto
+    consumer-group: messages-group
+    updates-topic: updates.json
+    concurrency: 1
+    partitions: 3
+    replicas: 3
 
 spring:
   application:

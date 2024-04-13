@@ -1,14 +1,15 @@
 package edu.java.scrapper.service.updaters;
 
 import edu.java.dto.LinkUpdateRequest;
-import edu.java.scrapper.clients.botclient.BotClient;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowClient;
 import edu.java.scrapper.clients.stackoverflow.StackOverflowResponse;
 import edu.java.scrapper.models.LinkModel;
 import edu.java.scrapper.service.LinkService;
 import edu.java.scrapper.service.TgChatService;
+import edu.java.scrapper.service.sender.UpdateSender;
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +21,9 @@ public class StackOverFlowUpdater implements Updater {
 
     private final StackOverflowClient stackOverflowClient;
 
-    private final BotClient botClient;
-
     private final TgChatService tgChatService;
+
+    private final UpdateSender updateSender;
 
     @Override
     public void handleUpdates(LinkModel link) {
@@ -30,7 +31,7 @@ public class StackOverFlowUpdater implements Updater {
         String[] uriParts = uri.getPath().split("/");
         StackOverflowResponse stackOverflowResponse = stackOverflowClient.getQuestionUpdate(uriParts[2]);
         OffsetDateTime currentTime = OffsetDateTime.now();
-        if (!stackOverflowResponse.lastActivityDate().equals(link.updatedAt())) {
+        if (!stackOverflowResponse.lastActivityDate().isEqual(link.updatedAt())) {
             if (stackOverflowResponse.answerCount().compareTo(link.updatesCount()) > 0) {
                 sendUpdate(link, String.format("New answer added for link %s", link.url()));
             } else {
@@ -57,13 +58,16 @@ public class StackOverFlowUpdater implements Updater {
     }
 
     private void sendUpdate(LinkModel link, String description) {
-        botClient.sendUpdates(new LinkUpdateRequest(
-            link.id(),
-            link.url(),
-            description,
-            tgChatService.getChatsByLink(link.id())
-            )
-        );
+        List<Long> chats = tgChatService.getChatsByLink(link.id());
+        if (!chats.isEmpty()) {
+            updateSender.sendUpdates(new LinkUpdateRequest(
+                    link.id(),
+                    link.url(),
+                    description,
+                    chats
+                )
+            );
+        }
     }
 }
 

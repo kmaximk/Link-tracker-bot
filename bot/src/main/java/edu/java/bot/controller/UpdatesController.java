@@ -1,7 +1,6 @@
 package edu.java.bot.controller;
 
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.request.SendMessage;
+import edu.java.bot.service.UserNotifier;
 import edu.java.dto.LinkUpdateRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class UpdatesController implements UpdatesApi {
 
-    private final TelegramBot bot;
+    private final UserNotifier userNotifier;
 
     @PostMapping("/updates")
     public ResponseEntity<Void> update(@Valid @RequestBody LinkUpdateRequest linkUpdate) {
         log.info("links updated {}", linkUpdate.url());
-        linkUpdate.tgChatIds().forEach(chat -> bot.execute(new SendMessage(chat, linkUpdate.description())));
+        userNotifier.sendUpdateToUser(linkUpdate);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

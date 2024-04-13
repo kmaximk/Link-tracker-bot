@@ -1,14 +1,15 @@
 package edu.java.scrapper.service.updaters;
 
 import edu.java.dto.LinkUpdateRequest;
-import edu.java.scrapper.clients.botclient.BotClient;
 import edu.java.scrapper.clients.github.GitHubClient;
 import edu.java.scrapper.clients.github.GitHubResponse;
 import edu.java.scrapper.models.LinkModel;
 import edu.java.scrapper.service.LinkService;
 import edu.java.scrapper.service.TgChatService;
+import edu.java.scrapper.service.sender.UpdateSender;
 import java.net.URI;
 import java.time.OffsetDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +21,10 @@ public class GitHubUpdater implements Updater {
 
     private final GitHubClient gitHubClient;
 
-    private final BotClient botClient;
 
     private final TgChatService tgChatService;
+
+    private final UpdateSender updateSender;
 
     @Override
     public void handleUpdates(LinkModel link) {
@@ -60,12 +62,16 @@ public class GitHubUpdater implements Updater {
     }
 
     private void sendUpdate(LinkModel link, String description) {
-        botClient.sendUpdates(new LinkUpdateRequest(
-            link.id(),
-            link.url(),
-            description,
-            tgChatService.getChatsByLink(link.id())
-        ));
+        List<Long> chats = tgChatService.getChatsByLink(link.id());
+        if (!chats.isEmpty()) {
+            updateSender.sendUpdates(new LinkUpdateRequest(
+                    link.id(),
+                    link.url(),
+                    description,
+                    chats
+                )
+            );
+        }
     }
 }
 
