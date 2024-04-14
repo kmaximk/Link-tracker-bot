@@ -7,7 +7,7 @@ app:
     force-check-delay: 100s
   bot-api-uri: http://localhost:8090
   database-access-type: jooq
-  use-queue: true
+  use-queue: false
   limit:
     tokens: 1000
     interval: 1h
@@ -36,6 +36,28 @@ spring:
     enabled: false
 server:
   port: 9191
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, prometheus
+      base-path: /
+      path-mapping:
+        prometheus: metrics
+  endpoint:
+    health:
+      show-details: always
+  server:
+    port: 8081
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
 
 logging:
   config: classpath:log4j2-plain.xml
