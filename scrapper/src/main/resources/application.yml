@@ -3,7 +3,7 @@ app:
   stackoverflow-api-uri: https://api.stackexchange.com/2.3
   scheduler:
     enable: true
-    interval: 60s
+    interval: 100s
     force-check-delay: 100s
   bot-api-uri: http://localhost:8090
   database-access-type: jooq
@@ -48,6 +48,11 @@ management:
   endpoint:
     health:
       show-details: always
+      enabled: true
+    info:
+      enabled: true
+    prometheus:
+      enabled: true
   server:
     port: 8081
   metrics:

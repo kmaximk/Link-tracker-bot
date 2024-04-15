@@ -10,6 +10,7 @@ import edu.java.bot.commands.ListCommand;
 import edu.java.bot.commands.StartCommand;
 import edu.java.bot.commands.TrackCommand;
 import edu.java.bot.commands.UntrackCommand;
+import io.micrometer.core.instrument.MeterRegistry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +19,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @ExtendWith(MockitoExtension.class)
+@SpringBootTest
 public class UserMessageProcessorTest {
 
     UserMessageProcessor messageProcessor;
@@ -38,6 +42,8 @@ public class UserMessageProcessorTest {
     @Mock
     ScrapperClient scrapperClient;
 
+    @Autowired MeterRegistry meterRegistry;
+
     @BeforeEach
     public void setup() {
         messageProcessor = new UserMessageProcessor(new ArrayList<>(List.of(
@@ -51,7 +57,7 @@ public class UserMessageProcessorTest {
                 new TrackCommand(scrapperClient),
                 new UntrackCommand(scrapperClient)
             )))
-        )));
+        )), meterRegistry);
     }
 
     @Test

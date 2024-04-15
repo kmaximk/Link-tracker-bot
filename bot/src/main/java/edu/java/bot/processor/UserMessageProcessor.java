@@ -4,6 +4,8 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.clients.ScrapperResponseException;
 import edu.java.bot.commands.Command;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,8 +15,13 @@ public class UserMessageProcessor {
 
     private final List<? extends Command> commands;
 
+    private final Counter messageCounter;
+
     @Autowired
-    public UserMessageProcessor(List<? extends Command> commands) {
+    public UserMessageProcessor(List<? extends Command> commands, MeterRegistry registry) {
+        messageCounter = Counter.builder("processed_messages_total")
+            .description("Number of processed messages by bot")
+            .register(registry);
         this.commands = commands;
     }
 
@@ -25,6 +32,7 @@ public class UserMessageProcessor {
     public SendMessage process(Update update) {
         for (Command command : commands) {
             if (command.supports(update)) {
+                messageCounter.increment();
                 try {
                     return command.handle(update);
                 } catch (ScrapperResponseException e) {

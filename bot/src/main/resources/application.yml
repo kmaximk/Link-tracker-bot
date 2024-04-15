@@ -35,6 +35,11 @@ management:
   endpoint:
     health:
       show-details: always
+      enabled: true
+    info:
+      enabled: true
+    prometheus:
+      enabled: true
   server:
     port: 8082
   metrics:

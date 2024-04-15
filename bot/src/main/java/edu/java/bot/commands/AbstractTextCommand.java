@@ -4,7 +4,6 @@ import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
 import edu.java.bot.clients.ScrapperClient;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -47,7 +46,7 @@ public abstract class AbstractTextCommand implements Command {
         }
         try {
             return checkLink(new URI(text[1]), update);
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             return new SendMessage(update.message().chat().id(), "Link is not correct URL");
         }
     }
