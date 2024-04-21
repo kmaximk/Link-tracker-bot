@@ -1,6 +1,7 @@
 app:
   telegram-token: ${TELEGRAM_TOKEN}
   scrapper-api-uri: http://localhost:9191
+  use-queue: false
   retry:
     backoff: linear
     limit: 60
@@ -21,6 +22,33 @@ spring:
     name: bot
   jackson:
     time-zone: UTC
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, prometheus
+      base-path: /
+      path-mapping:
+        prometheus: metrics
+  endpoint:
+    health:
+      show-details: always
+      enabled: true
+    info:
+      enabled: true
+    prometheus:
+      enabled: true
+  server:
+    port: 8082
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
 
 server:
   port: 8090

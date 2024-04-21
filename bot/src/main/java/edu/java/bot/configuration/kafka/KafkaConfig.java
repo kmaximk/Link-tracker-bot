@@ -1,6 +1,8 @@
 package edu.java.bot.configuration.kafka;
 
 import edu.java.bot.configuration.ApplicationConfig;
+import edu.java.bot.listener.MessagesKafkaListener;
+import edu.java.bot.service.UserNotifier;
 import edu.java.dto.LinkUpdateRequest;
 import java.util.Collections;
 import java.util.Map;
@@ -15,6 +17,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.IntegerDeserializer;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -32,9 +35,15 @@ import org.springframework.util.backoff.FixedBackOff;
 @EnableKafka
 @Configuration
 @Slf4j
+@ConditionalOnProperty(prefix = "app", name = "use-queue", havingValue = "true")
 public class KafkaConfig {
 
     private static final String DLQ = ".dlq";
+
+    @Bean
+    public MessagesKafkaListener messagesKafkaListener(UserNotifier userNotifier) {
+        return new MessagesKafkaListener(userNotifier);
+    }
 
     @Bean
     public ConcurrentKafkaListenerContainerFactory<Integer, LinkUpdateRequest> messageListenerContainerFactory(

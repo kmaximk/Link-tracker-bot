@@ -3,11 +3,11 @@ app:
   stackoverflow-api-uri: https://api.stackexchange.com/2.3
   scheduler:
     enable: true
-    interval: 60s
+    interval: 100s
     force-check-delay: 100s
   bot-api-uri: http://localhost:8090
   database-access-type: jooq
-  use-queue: true
+  use-queue: false
   limit:
     tokens: 1000
     interval: 1h
@@ -36,6 +36,33 @@ spring:
     enabled: false
 server:
   port: 9191
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info, health, prometheus
+      base-path: /
+      path-mapping:
+        prometheus: metrics
+  endpoint:
+    health:
+      show-details: always
+      enabled: true
+    info:
+      enabled: true
+    prometheus:
+      enabled: true
+  server:
+    port: 8081
+  metrics:
+    tags:
+      application: ${spring.application.name}
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+
 
 logging:
   config: classpath:log4j2-plain.xml
