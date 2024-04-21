@@ -13,7 +13,7 @@ jobs:
     name: Build
     permissions:
       packages: write
-      pull-requests: write 
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
@@ -48,6 +48,8 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+      - name: maven build
+        run: mvn -pl bot -am package
 
       - run: mvn -pl bot -am checkstyle:check
 
