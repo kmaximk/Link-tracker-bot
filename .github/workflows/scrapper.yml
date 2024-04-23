@@ -9,7 +9,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: scrapper
+  IMAGE_NAME: kmaximk/tinkoff/scrapper
 
 
 jobs:
